@@ -1,0 +1,9 @@
+#ifndef MISSILE_LAUNCHER_DEFINITIONS
+#define MISSILE_LAUNCHER_DEFINITIONS
+
+#define FORWARD 1
+#define BACKWARD 2
+#define LEFT 3
+#define RIGHT 4
+
+#endif
