@@ -54,16 +54,7 @@ void setup()
     moveMBot(FORWARD, 0);
 
     // Pour faire sonner le buzzer à une fréquence pendant un temps, faire :
-    // onBoardBuzzer.tone(900, 1000000);
-
-    for (int i = 0; i < 9000; i++)
-    {
-        onBoardBuzzer.tone(i, 1);
-    }
-    for (int i = 9000; i > 0; i--)
-    {
-        onBoardBuzzer.tone(i, 1);
-    }
+    onBoardBuzzer.tone(900, 100);
 
     // Pour changer la couleur des DEL RVB, faire :
     setLED(255, 0, 200);
@@ -93,7 +84,7 @@ void loop()
         break;
     }
 
-    // Si une touche a été pressée mais que le programme ne l'a pas encore pris en compte.
+    // Si une touche a été pressée, mais que le programme ne l'a pas encore pris en compte.
     if (onBoardInfraredSensor.available())
     {
         // On récupère la touche pressée.
