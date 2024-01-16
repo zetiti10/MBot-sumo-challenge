@@ -12,70 +12,164 @@
 
 // Autres fichiers du programme.
 #include "main.hpp"
+#include "pinDefinitions.hpp"
+#include "functions.hpp"
 
-// Création des différents composants montés sur le robot.
-MeDCMotor leftWheelMotor(9);
-MeDCMotor rightWheelMotor(10);
-MeRGBLed onBoardRGBLED(7, 2);
+// Création des différents capteurs montés sur le robot.
+MeLineFollower onBoardLineFinder(PORT_1);
+MeUltrasonicSensor onBoardUltrasonicSensor(PIN_ONBOARD_ULTRASONIC_SENSOR);
+MeInfraredReceiver onBoardInfraredSensor(PIN_ONBOARD_INFRARED_SENSOR);
+
+// Création des différents actionneurs montés sur le robot.
+MeDCMotor leftWheelMotor(PIN_LEFT_ONBOARD_RGB_LED);
+MeDCMotor rightWheelMotor(PIN_RIGHT_ONBOARD_RGB_LED);
+MeRGBLed onBoardLeftRGBLED(PIN_LEFT_ONBOARD_RGB_LED);
+MeRGBLed onBoardRightRGBLED(PIN_RIGHT_ONBOARD_RGB_LED);
 MeBuzzer onBoardBuzzer;
 
-/// @brief Démarre un mouvement du robot dans un sens à une vitesse.
-/// @param direction Le mouvement (FORWARD = avancer, BACKWARD = reculer, LEFT = tourner à gauche, RIGHT = tourner à droite).
-/// @param speed La vitesse, de 0 à 255.
-void move(int direction, int speed)
-{
-    int leftSpeed = 0;
-    int rightSpeed = 0;
-    
-    if (direction == FORWARD)
-    {
-        leftSpeed = speed;
-        rightSpeed = speed;
-    }
-
-    else if (direction == BACKWARD)
-    {
-        leftSpeed = -speed;
-        rightSpeed = -speed;
-    }
-
-    else if (direction == LEFT)
-    {
-        leftSpeed = -speed;
-        rightSpeed = speed;
-    }
-
-    else if (direction == RIGHT)
-    {
-        leftSpeed = speed;
-        rightSpeed = -speed;
-    }
-
-    leftWheelMotor.run((9) == M1 ? -(leftSpeed) : (leftSpeed));
-    rightWheelMotor.run((10) == M1 ? -(rightSpeed) : (rightSpeed));
-}
-
+// Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
 {
+    // Démarrage de la communication avec l'ordinateur.
+    Serial.begin(115200);
+
+    // Définition des broches des capteurs.
+    pinMode(PIN_ONBOARD_BUTTON, INPUT);
+
     // Pour déplacer le robot, utiliser ceci :
-    move(FORWARD, 100);
+    moveMBot(FORWARD, 100);
 
     // Pour attendre un délai en milliseconde, faire :
     delay(1000);
 
     // Pour arrêter le robot, mettre la vitesse à 0 :
-    move(FORWARD, 0);
+    moveMBot(FORWARD, 0);
 
     // Pour faire sonner le buzzer à une fréquence pendant un temps, faire :
-    onBoardBuzzer.tone(900, 1000);
+    // onBoardBuzzer.tone(900, 1000000);
+
+    for (int i = 0; i < 9000; i++)
+    {
+        onBoardBuzzer.tone(i, 1);
+        delay(1);
+    }
+    for (int i = 9000; i > 0; i--)
+    {
+        onBoardBuzzer.tone(i, 1);
+        delay(1);
+    }
 
     // Pour changer la couleur des DEL RVB, faire :
-    onBoardRGBLED.setColor(0, 255, 0, 0);
-    onBoardRGBLED.setColor(1, 0, 0, 255);
+    setLED(0, 0, 0);
 }
 
+// Cette fonction s'exécute en boucle après le `setup()`.
 void loop()
 {
-    // On ne fait rien.
-    delay(1);
+    int sensorState = onBoardLineFinder.readSensors();
+
+    switch (sensorState)
+    {
+    case S1_IN_S2_IN:
+        setLED(255, 255, 0);
+        break;
+    case S1_IN_S2_OUT:
+        setLeftLED(255, 255, 0);
+        setRightLED(0, 0, 0);
+        break;
+    case S1_OUT_S2_IN:
+        setLeftLED(0, 0, 0);
+        setRightLED(255, 255, 0);
+        break;
+    case S1_OUT_S2_OUT:
+        setLED(0, 0, 0);
+        break;
+    default:
+        break;
+    }
+
+    // Gestion de la télécommande infrarouge.
+    uint8_t ReceiverCode;
+    uint8_t buttonState;
+    static uint8_t PrebuttonState = 0;
+
+    buttonState = onBoardInfraredSensor.buttonState();
+    if (PrebuttonState != buttonState)
+    {
+        PrebuttonState = buttonState;
+        Serial.print("buttonState 0x");
+        Serial.println(buttonState);
+    }
+    if (onBoardInfraredSensor.available())
+    {
+        ReceiverCode = onBoardInfraredSensor.read();
+        switch (ReceiverCode)
+        {
+        case IR_BUTTON_A:
+            Serial.println("Press A.");
+            break;
+        case IR_BUTTON_B:
+            Serial.println("Press B.");
+            break;
+        case IR_BUTTON_C:
+            Serial.println("Press C.");
+            break;
+        case IR_BUTTON_D:
+            Serial.println("Press D.");
+            break;
+        case IR_BUTTON_E:
+            Serial.println("Press E.");
+            break;
+        case IR_BUTTON_F:
+            Serial.println("Press F.");
+            break;
+        case IR_BUTTON_SETTING:
+            Serial.println("Press Setting.");
+            break;
+        case IR_BUTTON_UP:
+            Serial.println("Press Up.");
+            break;
+        case IR_BUTTON_DOWN:
+            Serial.println("Press Down.");
+            break;
+        case IR_BUTTON_LEFT:
+            Serial.println("Press Left.");
+            break;
+        case IR_BUTTON_RIGHT:
+            Serial.println("Press Right.");
+            break;
+        case IR_BUTTON_0:
+            Serial.println("Press 0.");
+            break;
+        case IR_BUTTON_1:
+            Serial.println("Press 1.");
+            break;
+        case IR_BUTTON_2:
+            Serial.println("Press 2.");
+            break;
+        case IR_BUTTON_3:
+            Serial.println("Press 3.");
+            break;
+        case IR_BUTTON_4:
+            Serial.println("Press 4.");
+            break;
+        case IR_BUTTON_5:
+            Serial.println("Press 5.");
+            break;
+        case IR_BUTTON_6:
+            Serial.println("Press 6.");
+            break;
+        case IR_BUTTON_7:
+            Serial.println("Press 7.");
+            break;
+        case IR_BUTTON_8:
+            Serial.println("Press 8.");
+            break;
+        case IR_BUTTON_9:
+            Serial.println("Press 9.");
+            break;
+        default:
+            break;
+        }
+    }
 }

@@ -1,9 +1,15 @@
-#ifndef MISSILE_LAUNCHER_DEFINITIONS
-#define MISSILE_LAUNCHER_DEFINITIONS
+#ifndef MAIN_DEFINITIONS
+#define MAIN_DEFINITIONS
 
-#define FORWARD 1
-#define BACKWARD 2
-#define LEFT 3
-#define RIGHT 4
+#include <MeMCore.h>
+
+extern MeLineFollower onBoardLineFinder;
+extern MeUltrasonicSensor onBoardUltrasonicSensor;
+
+extern MeDCMotor leftWheelMotor;
+extern MeDCMotor rightWheelMotor;
+extern MeRGBLed onBoardLeftRGBLED;
+extern MeRGBLed onBoardRightRGBLED;
+extern MeBuzzer onBoardBuzzer;
 
 #endif
