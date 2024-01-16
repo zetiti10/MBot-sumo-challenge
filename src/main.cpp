@@ -30,12 +30,20 @@ MeBuzzer onBoardBuzzer;
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
 {
+    /*          ZONE À NE PAS MODIFIER          */
+    
     // Démarrage de la communication avec l'ordinateur.
     Serial.begin(115200);
 
     // Définition des broches des capteurs.
     pinMode(PIN_ONBOARD_BUTTON, INPUT);
 
+    // Lancement du capteur infrarouge (pour détecter les appuis de la télécommande).
+    onBoardInfraredSensor.begin();
+
+    /*          ZONE À NE PAS MODIFIER          */
+    
+    
     // Pour déplacer le robot, utiliser ceci :
     moveMBot(FORWARD, 100);
 
@@ -51,24 +59,21 @@ void setup()
     for (int i = 0; i < 9000; i++)
     {
         onBoardBuzzer.tone(i, 1);
-        delay(1);
     }
     for (int i = 9000; i > 0; i--)
     {
         onBoardBuzzer.tone(i, 1);
-        delay(1);
     }
 
     // Pour changer la couleur des DEL RVB, faire :
-    setLED(0, 0, 0);
+    setLED(255, 0, 200);
 }
 
 // Cette fonction s'exécute en boucle après le `setup()`.
 void loop()
 {
-    int sensorState = onBoardLineFinder.readSensors();
-
-    switch (sensorState)
+    // Test du détecteur de ligne.
+    switch (onBoardLineFinder.readSensors())
     {
     case S1_IN_S2_IN:
         setLED(255, 255, 0);
@@ -88,22 +93,14 @@ void loop()
         break;
     }
 
-    // Gestion de la télécommande infrarouge.
-    uint8_t ReceiverCode;
-    uint8_t buttonState;
-    static uint8_t PrebuttonState = 0;
-
-    buttonState = onBoardInfraredSensor.buttonState();
-    if (PrebuttonState != buttonState)
-    {
-        PrebuttonState = buttonState;
-        Serial.print("buttonState 0x");
-        Serial.println(buttonState);
-    }
+    // Si une touche a été pressée mais que le programme ne l'a pas encore pris en compte.
     if (onBoardInfraredSensor.available())
     {
-        ReceiverCode = onBoardInfraredSensor.read();
-        switch (ReceiverCode)
+        // On récupère la touche pressée.
+        unsigned int receiverCode = onBoardInfraredSensor.read();
+
+        // Affichage de la touche pressée.
+        switch (receiverCode)
         {
         case IR_BUTTON_A:
             Serial.println("Press A.");
