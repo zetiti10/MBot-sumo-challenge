@@ -1,8 +1,6 @@
 #ifndef PIN_DEFINITIONS
 #define PIN_DEFINITIONS
 
-#include <MeMCore.h>
-
 // Définition des broches des capteurs.
 #define PIN_ONBOARD_LINE_FINDER PORT_1
 #define PIN_ONBOARD_ULTRASONIC_SENSOR PORT_3 // A vérifier !

@@ -2,10 +2,14 @@
 #define MAIN_DEFINITIONS
 
 #include <MeMCore.h>
+#include <SoftwareSerial.h>
 
+// Création des différents capteurs montés sur le robot.
 extern MeLineFollower onBoardLineFinder;
 extern MeUltrasonicSensor onBoardUltrasonicSensor;
+extern MeInfraredReceiver onBoardInfraredSensor;
 
+// Création des différents actionneurs montés sur le robot.
 extern MeDCMotor leftWheelMotor;
 extern MeDCMotor rightWheelMotor;
 extern MeRGBLed onBoardLeftRGBLED;
