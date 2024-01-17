@@ -9,6 +9,7 @@
 // Ajout des bibilothèques au programme.
 #include <Arduino.h>
 #include <MeMCore.h>
+#include <SoftwareSerial.h>
 
 // Autres fichiers du programme.
 #include "functions.hpp"

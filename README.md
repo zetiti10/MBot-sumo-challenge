@@ -14,7 +14,7 @@ Le programme est écrit en C++, un langage de programmation couramment utilisé 
 
 > Une fonction est un bloc d'instructions, des lignes de code s'exécutant de haut en bas. Une fonction peut être exécutée en l'appelant depuis un autre endroit du programme.
 
-De nombreuses fonctions sont disponibles pour contrôler facilement les divers composants du robot.
+De nombreuses fonctions sont disponibles pour contrôler facilement les divers composants du robot. Leur fonctionnement est expliqué plus loin dans ce guide.
 
 Tous les fichiers sont commentés pour faciliter la compréhension du programme. La documentation des fonctions est affichée lorsqu'elles sont pointées par la souris.
 
@@ -24,6 +24,10 @@ Le programme est réparti en plusieurs fichiers ayant différentes fonctions. Le
 - Le `void loop()` qui s'exécute en boucle après le `void setup()`. Cette fonction exécute toutes les actions du robot.
 
 Votre zone de travail est ici : vous pouvez mettre des choses dans les deux fonctions selon vos besoins.
+
+Le projet contient aussi un fichier `functions.cpp` : c'est ici que certaines fonctions sont écrites pour nous simplifier la vie !
+
+> Chaque fichier `.cpp` a un fichier `.hpp` associé (par exemple, `main.hpp`). Ils servent a expliquer, en quelque sorte, ce que fait le fichier `hpp` au reste du programme. Il n'est pas nécessaire de les modifier.
 
 ### Utilisations des capteurs et des actionneurs
 
@@ -71,10 +75,17 @@ Il permet de détecter un objet à l'avant du robot, et de donner sa distance.
 
 Pour l'utiliser, deux méthodes existent :
 
-- La fonction `ultraSensor.distanceCm()` renvoie la distance.
-- La fonction `ultraSensor.distanceCm(int maximimDistance)` renvoie la distance avec une valeur de `maximumDistance` au maximum.
+- La fonction `onBoardUltrasonicSensor.distanceCm()` renvoie la distance.
+- La fonction `onBoardUltrasonicSensor.distanceCm(int maximimDistance)` renvoie la distance avec une valeur de `maximumDistance` au maximum.
 
 > À vérifier : il est possible que la mesure ne marche que tout les 100ms.
+
+Exemple d'utilisation :
+
+```cpp
+// On émet un son dont la fréquence dépend de la distance avec l'objet détecté.
+onBoardBuzzer.tone(onBoardUltrasonicSensor.distanceCm(), 100);
+```
 
 #### Le capteur infrarouge
 
