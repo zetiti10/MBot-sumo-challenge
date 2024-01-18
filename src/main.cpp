@@ -40,5 +40,28 @@ void setup()
 // Cette fonction s'exécute en boucle après le `setup()`.
 void loop()
 {
-    // Programme exécuté en boucle.
+    if (onBoardInfraredSensor.keyPressed(BUTTON_UP))
+    {
+        moveMBot(FORWARD, 255);
+    }
+
+    else if (onBoardInfraredSensor.keyPressed(BUTTON_DOWN))
+    {
+        moveMBot(BACKWARD, 255);
+    }
+
+    else if (onBoardInfraredSensor.keyPressed(BUTTON_LEFT))
+    {
+        moveMBot(LEFT, 150);
+    }
+
+    else if (onBoardInfraredSensor.keyPressed(BUTTON_RIGHT))
+    {
+        moveMBot(RIGHT, 150);
+    }
+
+    else
+    {
+        moveMBot(FORWARD, 0);
+    }
 }
