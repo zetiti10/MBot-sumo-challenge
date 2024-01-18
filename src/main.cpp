@@ -40,5 +40,24 @@ void setup()
 // Cette fonction s'exécute en boucle après le `setup()`.
 void loop()
 {
-    // Programme exécuté en boucle.
+    if (buttonPressed())
+    {
+        // On attend qu'il soit relaché.
+        while (buttonPressed())
+            delay(1);
+
+        // Puis on attend un peu par précaution !
+        delay(50);
+
+        if (onBoardInfraredSensor.keyPressed(BUTTON_A))
+        {
+            setLeftLED(255, 0, 0);
+        }
+
+        if (onBoardInfraredSensor.keyPressed(BUTTON_B))
+        {
+
+            setLeftLED(0, 255, 0);
+        }
+    }
 }
