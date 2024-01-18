@@ -26,6 +26,11 @@
 #define BUTTON_9 74
 #define BUTTON_SETTINGS 21
 
+// Configuration du programme.
+#define SIREN_SPEED_1 3
+#define SIREN_SPEED_2 1
+#define LIGHT_SPEED 10
+
 // Création des différents capteurs montés sur le robot.
 extern MeLineFollower onBoardLineFinder;
 extern MeUltrasonicSensor onBoardUltrasonicSensor;

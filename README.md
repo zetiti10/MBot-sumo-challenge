@@ -1,6 +1,8 @@
 # MBot-sumo-challenge
 
-Programme du MBot pour gagner des combats de sumo.
+Programme du MBot pour...
+
+À ne pas installer sur son propre robot ! Pour se connecter à un autre robot, faire un appui long sur le bouton de la clé bluetooth, puis attendre...
 
 > Toute tentative d'esponnage industriel est considérée comme une déclaration de guerre. Nous n'aurons aucune pitié. Je vous surveille 👀
 
