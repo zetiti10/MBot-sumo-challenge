@@ -54,7 +54,7 @@ void moveMBot(int direction, int speed)
     }
 
     leftWheelMotor.run(-(leftSpeed));
-    rightWheelMotor.run(-(rightSpeed));
+    rightWheelMotor.run(rightSpeed);
 }
 
 /// @brief Définit la couleur de la DEL RVB gauche.
@@ -91,7 +91,7 @@ void setLED(int r, int g, int b)
 /// @return Renvoie `true` si le bouton est pressé.
 boolean buttonPressed()
 {
-    if (analogRead(PIN_ONBOARD_BUTTON) > 10) // A vérifier !
+    if (analogRead(PIN_ONBOARD_BUTTON) < 10) // A vérifier !
         return true;
 
     else

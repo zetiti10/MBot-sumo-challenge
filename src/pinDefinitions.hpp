@@ -4,7 +4,6 @@
 // Définition des broches des capteurs.
 #define PIN_ONBOARD_LINE_FINDER PORT_1
 #define PIN_ONBOARD_ULTRASONIC_SENSOR PORT_3 // A vérifier !
-#define PIN_ONBOARD_INFRARED_SENSOR PORT_6
 #define PIN_ONBOARD_BUTTON 21
 
 // Définition des broches des actionneurs.

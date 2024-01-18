@@ -19,11 +19,11 @@
 // Création des différents capteurs montés sur le robot.
 MeLineFollower onBoardLineFinder(PORT_1);
 MeUltrasonicSensor onBoardUltrasonicSensor(PIN_ONBOARD_ULTRASONIC_SENSOR);
-MeInfraredReceiver onBoardInfraredSensor(PIN_ONBOARD_INFRARED_SENSOR);
+MeIR onBoardInfraredSensor;
 
 // Création des différents actionneurs montés sur le robot.
-MeDCMotor leftWheelMotor(PIN_LEFT_ONBOARD_RGB_LED);
-MeDCMotor rightWheelMotor(PIN_RIGHT_ONBOARD_RGB_LED);
+MeDCMotor leftWheelMotor(PIN_LEFT_WHEEL_MOTOR);
+MeDCMotor rightWheelMotor(PIN_RIGHT_WHEEL_MOTOR);
 MeRGBLed onBoardLeftRGBLED(PIN_LEFT_ONBOARD_RGB_LED);
 MeRGBLed onBoardRightRGBLED(PIN_RIGHT_ONBOARD_RGB_LED);
 MeBuzzer onBoardBuzzer;
@@ -70,6 +70,8 @@ void setup()
     // Pour changer la couleur des DEL RVB, faire :
     setLED(255, 0, 200);
 
+    delay(1000);
+
     // Pour envoyer un message à l'ordinateur, faire :
     Serial.println("Ça sent la lose chez les autres groupes…");
 
@@ -102,90 +104,19 @@ void loop()
         break;
     }
 
-    // Si une touche a été pressée, mais que le programme ne l'a pas encore pris en compte.
-    if (onBoardInfraredSensor.available())
+    if (onBoardInfraredSensor.keyPressed(69))
     {
-        // On récupère la touche pressée.
-        unsigned int receiverCode = onBoardInfraredSensor.read();
-
-        // Affichage de la touche pressée.
-        switch (receiverCode)
+        for (int i = 0; i < 9000; i++)
         {
-        case IR_BUTTON_A:
-            Serial.println("Press A.");
-            break;
-        case IR_BUTTON_B:
-            Serial.println("Press B.");
-            break;
-        case IR_BUTTON_C:
-            Serial.println("Press C.");
-            break;
-        case IR_BUTTON_D:
-            Serial.println("Press D.");
-            break;
-        case IR_BUTTON_E:
-            Serial.println("Press E.");
-            break;
-        case IR_BUTTON_F:
-            Serial.println("Press F.");
-            break;
-        case IR_BUTTON_SETTING:
-            Serial.println("Press Setting.");
-            break;
-        case IR_BUTTON_UP:
-            // Je ne cliquerai pas sur ce bouton...
-            Serial.println("Press Up.");
-            for (int i = 0; i < 9000; i++)
-            {
-                onBoardBuzzer.tone(i, 1);
-            }
-            break;
-        case IR_BUTTON_DOWN:
-            // Ni sur celui la...
-            Serial.println("Press Down.");
-            for (int i = 9000; i > 0; i--)
-            {
-                onBoardBuzzer.tone(i, 1);
-            }
-            break;
-        case IR_BUTTON_LEFT:
-            Serial.println("Press Left.");
-            break;
-        case IR_BUTTON_RIGHT:
-            Serial.println("Press Right.");
-            break;
-        case IR_BUTTON_0:
-            Serial.println("Press 0.");
-            break;
-        case IR_BUTTON_1:
-            Serial.println("Press 1.");
-            break;
-        case IR_BUTTON_2:
-            Serial.println("Press 2.");
-            break;
-        case IR_BUTTON_3:
-            Serial.println("Press 3.");
-            break;
-        case IR_BUTTON_4:
-            Serial.println("Press 4.");
-            break;
-        case IR_BUTTON_5:
-            Serial.println("Press 5.");
-            break;
-        case IR_BUTTON_6:
-            Serial.println("Press 6.");
-            break;
-        case IR_BUTTON_7:
-            Serial.println("Press 7.");
-            break;
-        case IR_BUTTON_8:
-            Serial.println("Press 8.");
-            break;
-        case IR_BUTTON_9:
-            Serial.println("Press 9.");
-            break;
-        default:
-            break;
+            onBoardBuzzer.tone(i, 1);
+        }
+    }
+
+    if (onBoardInfraredSensor.keyPressed(70))
+    {
+        for (int i = 9000; i > 0; i--)
+        {
+            onBoardBuzzer.tone(i, 1);
         }
     }
 
@@ -207,4 +138,6 @@ void loop()
     if (distanceTestMode)
         // On émet un son dont la fréquence dépend de la distance avec l'objet détecté.
         onBoardBuzzer.tone(onBoardUltrasonicSensor.distanceCm(), 100);
+
+    Serial.println(onBoardUltrasonicSensor.distanceCm());
 }

@@ -7,7 +7,7 @@
 // Création des différents capteurs montés sur le robot.
 extern MeLineFollower onBoardLineFinder;
 extern MeUltrasonicSensor onBoardUltrasonicSensor;
-extern MeInfraredReceiver onBoardInfraredSensor;
+extern MeIR onBoardInfraredSensor;
 
 // Création des différents actionneurs montés sur le robot.
 extern MeDCMotor leftWheelMotor;
