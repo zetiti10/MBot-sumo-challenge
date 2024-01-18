@@ -6,6 +6,7 @@
 #define LEFT 3
 #define RIGHT 4
 
+void initialization();
 void moveMBot(int direction, int speed);
 void setLeftLED(int r, int g, int b);
 void setRightLED(int r, int g, int b);
