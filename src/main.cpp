@@ -32,47 +32,57 @@ MeBuzzer onBoardBuzzer;
 int counter = 0;
 boolean mode = false;
 
+void sendMessage(String message)
+{
+    String messageToSend;
+    messageToSend = "\033[0;32m";
+    messageToSend += message;
+    messageToSend += "\033[0m";
+
+    Serial.println(messageToSend);
+}
+
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
 {
     // NE PAS SUPPRIMER LA LIGNE CI-DESSOUS !
     initialization();
 
-    Serial.println("                 uuuuuuu");
-    Serial.println("             uu$$$$$$$$$$$uu");
-    Serial.println("          uu$$$$$$$$$$$$$$$$$uu");
-    Serial.println("         u$$$$$$$$$$$$$$$$$$$$$u");
-    Serial.println("        u$$$$$$$$$$$$$$$$$$$$$$$u");
-    Serial.println("       u$$$$$$$$$$$$$$$$$$$$$$$$$u");
-    Serial.println("       u$$$$$$$$$$$$$$$$$$$$$$$$$u");
-    Serial.println("       u$$$$$$"   "$$$"   "$$$$$$u");
-    Serial.println("       u$$$$$$|   |$$$|   |$$$$$$u");
-    Serial.println("       |$$$$|      u$u       $$$$|");
-    Serial.println("        $$$u       u$u       u$$$");
-    Serial.println("        $$$u      u$$$u      u$$$");
-    Serial.println("         |$$$$uu$$$   $$$uu$$$$|");
-    Serial.println("          |$$$$$$$|   |$$$$$$$|");
-    Serial.println("            u$$$$$$$u$$$$$$$u");
-    Serial.println("             u$|$|$|$|$|$|$u");
-    Serial.println("  uuu        $$u$ $ $ $ $u$$       uuu");
-    Serial.println(" u$$$$        $$$$$u$u$u$$$       u$$$$");
-    Serial.println("  $$$$$uu      |$$$$$$$$$|     uu$$$$$$");
-    Serial.println("u$$$$$$$$$$$uu    |||||    uuuu$$$$$$$$$$");
-    Serial.println("$$$$|||$$$$$$$$$$uuu   uu$$$$$$$$$|||$$$|");
-    Serial.println(" |||      ||$$$$$$$$$$$uu ||$|||");
-    Serial.println("           uuuu ||$$$$$$$$$$uuu");
-    Serial.println("  u$$$uuu$$$$$$$$$uu ||$$$$$$$$$$$uuu$$$");
-    Serial.println("  $$$$$$$$$$||||           ||$$$$$$$$$$$|");
-    Serial.println("   |$$$$$|                      ||$$$$||");
-    Serial.println("     $$$|                         $$$$|");
+    sendMessage("                 uuuuuuu");
+    sendMessage("             uu$$$$$$$$$$$uu");
+    sendMessage("          uu$$$$$$$$$$$$$$$$$uu");
+    sendMessage("         u$$$$$$$$$$$$$$$$$$$$$u");
+    sendMessage("        u$$$$$$$$$$$$$$$$$$$$$$$u");
+    sendMessage("       u$$$$$$$$$$$$$$$$$$$$$$$$$u");
+    sendMessage("       u$$$$$$$$$$$$$$$$$$$$$$$$$u");
+    sendMessage("       u$$$$$$"   "$$$"   "$$$$$$u");
+    sendMessage("       u$$$$$$|   |$$$|   |$$$$$$u");
+    sendMessage("       |$$$$|      u$u       $$$$|");
+    sendMessage("        $$$u       u$u       u$$$");
+    sendMessage("        $$$u      u$$$u      u$$$");
+    sendMessage("         |$$$$uu$$$   $$$uu$$$$|");
+    sendMessage("          |$$$$$$$|   |$$$$$$$|");
+    sendMessage("            u$$$$$$$u$$$$$$$u");
+    sendMessage("             u$|$|$|$|$|$|$u");
+    sendMessage("  uuu        $$u$ $ $ $ $u$$       uuu");
+    sendMessage(" u$$$$        $$$$$u$u$u$$$       u$$$$");
+    sendMessage("  $$$$$uu      |$$$$$$$$$|     uu$$$$$$");
+    sendMessage("u$$$$$$$$$$$uu    |||||    uuuu$$$$$$$$$$");
+    sendMessage("$$$$|||$$$$$$$$$$uuu   uu$$$$$$$$$|||$$$|");
+    sendMessage(" |||      ||$$$$$$$$$$$uu ||$|||");
+    sendMessage("           uuuu ||$$$$$$$$$$uuu");
+    sendMessage("  u$$$uuu$$$$$$$$$uu ||$$$$$$$$$$$uuu$$$");
+    sendMessage("  $$$$$$$$$$||||           ||$$$$$$$$$$$|");
+    sendMessage("   |$$$$$|                      ||$$$$||");
+    sendMessage("     $$$|                         $$$$|");
 
-    Serial.println("");
+    sendMessage("");
     
-    Serial.println("-----------------------------------------");
-    Serial.println("|                                       |");
-    Serial.println("|              READY TO TROLL           |");
-    Serial.println("|                                       |");
-    Serial.println("-----------------------------------------");
+    sendMessage("-----------------------------------------");
+    sendMessage("|                                       |");
+    sendMessage("|              READY TO TROLL           |");
+    sendMessage("|                                       |");
+    sendMessage("-----------------------------------------");
 }
 
 void schedule(int frequency)
