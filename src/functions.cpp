@@ -83,8 +83,8 @@ void moveMBot(int direction, int speed)
 /// @param b La luminosité du bleu (de 0 à 255).
 void setLeftLED(int r, int g, int b)
 {
-    onBoardLeftRGBLED.setColor(r, g, b);
-    onBoardLeftRGBLED.show();
+    onBoardRGBLED.setColor(2, r, g, b);
+    onBoardRGBLED.show();
 }
 
 /// @brief Définit la couleur de la DEL RVB droite.
@@ -93,8 +93,8 @@ void setLeftLED(int r, int g, int b)
 /// @param b La luminosité du bleu (de 0 à 255).
 void setRightLED(int r, int g, int b)
 {
-    onBoardRightRGBLED.setColor(r, g, b);
-    onBoardRightRGBLED.show();
+    onBoardRGBLED.setColor(1, r, g, b);
+    onBoardRGBLED.show();
 }
 
 /// @brief Définit la couleur des deux DEL RVB.
