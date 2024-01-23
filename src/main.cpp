@@ -34,6 +34,18 @@ void setup()
     initialization();
 
     // Programme exécuté une fois au démarrage du robot.
+    // Délais de 15 secondes avant le démarrage du mouvement.
+    delay(15 * 1000);
+
+    for (int i = 0; i < 4; i ++)
+    {
+        moveMBot(FORWARD, 255);
+        delay(1 * 1000);
+        moveMBot(RIGHT, 255);
+        delay(1 * 1000);
+    }
+
+    moveMBot(FORWARD, 0);
 }
 
 // Cette fonction s'exécute en boucle après le `setup()`.
