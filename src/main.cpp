@@ -35,29 +35,31 @@ void setup()
     initialization();
 
     // Programme exécuté une fois au démarrage du robot.
+    while (!buttonPressed())
+        delay(1);
 }
 
 // Cette fonction s'exécute en boucle après le `setup()`.
 void loop()
 {
-    if (buttonPressed())
+
+    // On attend qu'il soit relaché.
+
+    // Puis on attend un peu par précaution !
+    delay(50);
+
+    if (onBoardInfraredSensor.keyPressed(BUTTON_A))
     {
-        // On attend qu'il soit relaché.
-        while (buttonPressed())
-            delay(1);
-
-        // Puis on attend un peu par précaution !
-        delay(50);
-
-        if (onBoardInfraredSensor.keyPressed(BUTTON_A))
-        {
-            setLeftLED(255, 0, 0);
-        }
-
-        if (onBoardInfraredSensor.keyPressed(BUTTON_B))
-        {
-
-            setLeftLED(0, 255, 0);
-        }
+        setLeftLED(150, 0, 0);
+        Serial.println("Bouton A cliqué");
     }
+
+    else if (onBoardInfraredSensor.keyPressed(BUTTON_B))
+    {
+        setRightLED(0, 0, 150);
+        Serial.println("Bouton B cliqué");
+    }
+
+    else 
+        setLED(0, 0, 0);
 }
