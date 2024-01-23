@@ -34,6 +34,17 @@ void setup()
     initialization();
 
     // Programme exécuté une fois au démarrage du robot.
+    // Délais de 10 secondes, soit 10 * 1000 millisecondes.
+    delay(10 * 1000);
+
+    // Le robot avance à la vitesse maximale.
+    moveMBot(FORWARD, 255);
+
+    // On attend que le robot avance.
+    delay(1 * 1000);
+
+    // Arrêt du robot.
+    moveMBot(FORWARD, 0);
 }
 
 // Cette fonction s'exécute en boucle après le `setup()`.
