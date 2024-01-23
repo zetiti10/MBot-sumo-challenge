@@ -24,8 +24,7 @@ MeIR onBoardInfraredSensor;
 // Création des différents actionneurs montés sur le robot.
 MeDCMotor leftWheelMotor(PIN_LEFT_WHEEL_MOTOR);
 MeDCMotor rightWheelMotor(PIN_RIGHT_WHEEL_MOTOR);
-MeRGBLed onBoardLeftRGBLED(PIN_LEFT_ONBOARD_RGB_LED);
-MeRGBLed onBoardRightRGBLED(PIN_RIGHT_ONBOARD_RGB_LED);
+MeRGBLed onBoardRGBLED(PIN_RIGHT_ONBOARD_RGB_LED, PIN_LEFT_ONBOARD_RGB_LED);
 MeBuzzer onBoardBuzzer;
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
@@ -41,4 +40,15 @@ void setup()
 void loop()
 {
     // Programme exécuté en boucle.
+    setLeftLED(255, 0, 0);
+
+    delay(1000);
+
+    setRightLED(0, 255, 0);
+
+    delay(1000);
+
+    setLED(0, 0, 255);
+
+    delay(1000);
 }
