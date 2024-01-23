@@ -34,8 +34,7 @@ extern MeIR onBoardInfraredSensor;
 // Création des différents actionneurs montés sur le robot.
 extern MeDCMotor leftWheelMotor;
 extern MeDCMotor rightWheelMotor;
-extern MeRGBLed onBoardLeftRGBLED;
-extern MeRGBLed onBoardRightRGBLED;
+extern MeRGBLed onBoardRGBLED;
 extern MeBuzzer onBoardBuzzer;
 
 #endif
