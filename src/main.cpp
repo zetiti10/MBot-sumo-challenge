@@ -40,15 +40,4 @@ void setup()
 void loop()
 {
     // Programme exécuté en boucle.
-    setLeftLED(255, 0, 0);
-
-    delay(1000);
-
-    setRightLED(0, 255, 0);
-
-    delay(1000);
-
-    setLED(0, 0, 255);
-
-    delay(1000);
 }
