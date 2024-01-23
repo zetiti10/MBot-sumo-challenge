@@ -32,21 +32,27 @@ MeBuzzer onBoardBuzzer;
 int counter = 0;
 boolean mode = false;
 
-/*void sendMessage(String message)
+void sendMessage(String message)
 {
+    delay(10);
+
     String messageToSend;
     messageToSend = "\033[0;32m";
     messageToSend += message;
     messageToSend += "\033[0m";
 
     Serial.println(messageToSend);
-}*/
+
+    delay(10);
+}
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
 {
     // NE PAS SUPPRIMER LA LIGNE CI-DESSOUS !
     initialization();
+
+    delay(1000);
 
     /*sendMessage("                 uuuuuuu");
     sendMessage("             uu$$$$$$$$$$$uu");
@@ -57,7 +63,7 @@ void setup()
     sendMessage("       u$$$$$$$$$$$$$$$$$$$$$$$$$u");
     sendMessage("       u$$$$$$"   "$$$"   "$$$$$$u");
     sendMessage("       u$$$$$$|   |$$$|   |$$$$$$u");
-    sendMessage("       |$$$$|      u$u       $$$$|");
+    sendMessage("       |$$$$|      u$u       $$$$|");*/
     sendMessage("        $$$u       u$u       u$$$");
     sendMessage("        $$$u      u$$$u      u$$$");
     sendMessage("         |$$$$uu$$$   $$$uu$$$$|");
@@ -74,7 +80,7 @@ void setup()
     sendMessage("  u$$$uuu$$$$$$$$$uu ||$$$$$$$$$$$uuu$$$");
     sendMessage("  $$$$$$$$$$||||           ||$$$$$$$$$$$|");
     sendMessage("   |$$$$$|                      ||$$$$||");
-    sendMessage("     $$$|                         $$$$|");
+    /*sendMessage("     $$$|                         $$$$|");
 
     sendMessage("");
     
