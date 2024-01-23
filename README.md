@@ -154,7 +154,7 @@ Vous pouvez utiliser un site tel que [celui-ci](https://www.google.com/search?cl
 Les fonctions sont :
 
 - `setLeftLED(int r, int g, int b)` pour contrôler la DEL gauche.
-- `setLeftLED(int r, int g, int b)` pour contrôler la DEL droite.
+- `setRightLED(int r, int g, int b)` pour contrôler la DEL droite.
 - `setLED(int r, int g, int b)` pour contrôler les deux DEL.
 
 Exemple d'utilisation :
