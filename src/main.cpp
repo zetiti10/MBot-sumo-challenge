@@ -49,13 +49,13 @@ void loop()
 
     if (onBoardInfraredSensor.keyPressed(BUTTON_A))
     {
-        setLeftLED(150, 0, 0);
+        setLeftLED(255, 0, 0);
         Serial.println("Bouton A cliqué");
     }
 
     else if (onBoardInfraredSensor.keyPressed(BUTTON_B))
     {
-        setRightLED(0, 0, 150);
+        setRightLED(10, 150, 0);
         Serial.println("Bouton B cliqué");
     }
 
