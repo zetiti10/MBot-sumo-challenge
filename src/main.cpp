@@ -32,7 +32,7 @@ MeBuzzer onBoardBuzzer;
 int counter = 0;
 boolean mode = false;
 
-void sendMessage(String message)
+/*void sendMessage(String message)
 {
     String messageToSend;
     messageToSend = "\033[0;32m";
@@ -40,7 +40,7 @@ void sendMessage(String message)
     messageToSend += "\033[0m";
 
     Serial.println(messageToSend);
-}
+}*/
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
@@ -48,7 +48,7 @@ void setup()
     // NE PAS SUPPRIMER LA LIGNE CI-DESSOUS !
     initialization();
 
-    sendMessage("                 uuuuuuu");
+    /*sendMessage("                 uuuuuuu");
     sendMessage("             uu$$$$$$$$$$$uu");
     sendMessage("          uu$$$$$$$$$$$$$$$$$uu");
     sendMessage("         u$$$$$$$$$$$$$$$$$$$$$u");
@@ -82,7 +82,7 @@ void setup()
     sendMessage("|                                       |");
     sendMessage("|              READY TO TROLL           |");
     sendMessage("|                                       |");
-    sendMessage("-----------------------------------------");
+    sendMessage("-----------------------------------------");*/
 }
 
 void schedule(int frequency)

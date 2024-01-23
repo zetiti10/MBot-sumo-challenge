@@ -29,7 +29,7 @@
 // Configuration du programme.
 #define SIREN_SPEED_1 3
 #define SIREN_SPEED_2 1
-#define LIGHT_SPEED 10
+#define LIGHT_SPEED 100
 
 // Création des différents capteurs montés sur le robot.
 extern MeLineFollower onBoardLineFinder;
