@@ -41,7 +41,7 @@ void setup()
     moveMBot(FORWARD, 255);
 
     // On attend que le robot avance.
-    delay(1 * 1000);
+    delay(1111);
 
     // Arrêt du robot.
     moveMBot(FORWARD, 0);
