@@ -46,38 +46,41 @@ void loop()
     // Programme exécuté en boucle.
 
     // Sélection du mode.
-    if (onBoardInfraredSensor.keyPressed(BUTTON_A))
+    if (onBoardInfraredSensor.keyPressed(BUTTON_A) && mode != BUTTON_A)
     {
         mode = BUTTON_A;
         Serial.println("Mode manuel activé.");
     }
 
-    else if (onBoardInfraredSensor.keyPressed(BUTTON_B))
+    else if (onBoardInfraredSensor.keyPressed(BUTTON_B) && mode != BUTTON_B)
     {
         mode = BUTTON_B;
-        Serial.println("Mode détécteur d'obstacles activé.");
+        Serial.println("Mode autonome activé.");
     }
 
-    else if (onBoardInfraredSensor.keyPressed(BUTTON_C))
+    else if (onBoardInfraredSensor.keyPressed(BUTTON_C) && mode != BUTTON_C)
     {
         mode = BUTTON_C;
         Serial.println("Mode suiveur de ligne activé.");
     }
 
-    if (onBoardInfraredSensor.keyPressed(BUTTON_D))
+    if (onBoardInfraredSensor.keyPressed(BUTTON_D) && speed != 100)
     {
         speed = 100;
+        Serial.println("Vitesse lente enclenchée.");
     }
 
-    else if (onBoardInfraredSensor.keyPressed(BUTTON_E))
+    else if (onBoardInfraredSensor.keyPressed(BUTTON_E) && speed != 255)
     {
         speed = 255;
+        Serial.println("Vitesse maximale enclenchée.");
     }
 
     // Exécution du mode en cours.
     if (mode == BUTTON_A)
     {
         setLED(255, 255, 255);
+        
         if (onBoardInfraredSensor.keyPressed(BUTTON_UP))
         {
             moveMBot(FORWARD, speed);
