@@ -29,6 +29,7 @@ MeBuzzer onBoardBuzzer;
 
 // Variables globales.
 int mode = BUTTON_A;
+int speed = 100;
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
@@ -48,51 +49,53 @@ void loop()
     if (onBoardInfraredSensor.keyPressed(BUTTON_A))
     {
         mode = BUTTON_A;
+        Serial.println("Mode manuel activé.");
     }
 
     else if (onBoardInfraredSensor.keyPressed(BUTTON_B))
     {
         mode = BUTTON_B;
+        Serial.println("Mode détécteur d'obstacles activé.");
     }
 
     else if (onBoardInfraredSensor.keyPressed(BUTTON_C))
     {
         mode = BUTTON_C;
+        Serial.println("Mode suiveur de ligne activé.");
     }
 
-    else if (onBoardInfraredSensor.keyPressed(BUTTON_D))
+    if (onBoardInfraredSensor.keyPressed(BUTTON_D))
     {
-        mode = BUTTON_D;
+        speed = 100;
     }
 
     else if (onBoardInfraredSensor.keyPressed(BUTTON_E))
     {
-        mode = BUTTON_E;
+        speed = 255;
     }
 
     // Exécution du mode en cours.
     if (mode == BUTTON_A)
     {
-        Serial.println("mode manuel activé");
         setLED(255, 255, 255);
         if (onBoardInfraredSensor.keyPressed(BUTTON_UP))
         {
-            moveMBot(FORWARD, 255);
+            moveMBot(FORWARD, speed);
         }
 
         else if (onBoardInfraredSensor.keyPressed(BUTTON_DOWN))
         {
-            moveMBot(BACKWARD, 255);
+            moveMBot(BACKWARD, speed);
         }
 
         else if (onBoardInfraredSensor.keyPressed(BUTTON_LEFT))
         {
-            moveMBot(LEFT, 150);
+            moveMBot(LEFT, speed);
         }
 
         else if (onBoardInfraredSensor.keyPressed(BUTTON_RIGHT))
         {
-            moveMBot(RIGHT, 150);
+            moveMBot(RIGHT, speed);
         }
 
         else
@@ -103,34 +106,10 @@ void loop()
 
     else if (mode == BUTTON_B)
     {
-        Serial.println("mode détécteur d'obstacles activé");
-        setLED(0, 255, 0);
-        if (onBoardInfraredSensor.keyPressed(BUTTON_UP))
-        {
-            moveMBot(FORWARD, 255);
-        }
-
-        else if (onBoardInfraredSensor.keyPressed(BUTTON_DOWN))
-        {
-            moveMBot(BACKWARD, 255);
-        }
-
-        else if (onBoardInfraredSensor.keyPressed(BUTTON_LEFT))
-        {
-            moveMBot(LEFT, 150);
-        }
-
-        else if (onBoardInfraredSensor.keyPressed(BUTTON_RIGHT))
-        {
-            moveMBot(RIGHT, 150);
-        }
-
-        else
-        {
-            moveMBot(FORWARD, 0);
-        }
-        onBoardBuzzer.tone(onBoardUltrasonicSensor.distanceCm()*1000, 100);
-        Serial.println(onBoardUltrasonicSensor.distanceCm());
+        int distance = map(onBoardUltrasonicSensor.distanceCm(), 0, 50, 255, 0);
+        if(distance < 0) distance = 0;
+        setLED(0, distance, 0);
+        delay(100);
     }
 
     else if (mode == BUTTON_C)
@@ -139,33 +118,24 @@ void loop()
         {
         case S1_IN_S2_IN:
             setLED(255, 255, 0);
-            moveMBot(FORWARD, 100);
+            moveMBot(FORWARD, speed);
             break;
         case S1_IN_S2_OUT:
             setLeftLED(255, 255, 0);
             setRightLED(0, 0, 0);
-            moveMBot(LEFT, 100); 
+            moveMBot(LEFT, speed);
             break;
         case S1_OUT_S2_IN:
             setLeftLED(0, 0, 0);
             setRightLED(255, 255, 0);
-            moveMBot(RIGHT, 100); 
-            break; 
+            moveMBot(RIGHT, speed);
+            break;
         case S1_OUT_S2_OUT:
             setLED(0, 0, 0);
-            moveMBot(BACKWARD, 100);
+            moveMBot(BACKWARD, speed);
             break;
         default:
             break;
         }
-        Serial.println("mode suiveur de ligne activé");
-    }
-
-    else if (mode == BUTTON_D)
-    {
-    }
-
-    else if (mode == BUTTON_E)
-    {
     }
 }
