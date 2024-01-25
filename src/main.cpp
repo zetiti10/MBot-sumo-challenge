@@ -40,4 +40,15 @@ void setup()
 void loop()
 {
     // Programme exécuté en boucle.
+    // Si le bouton est pressé.
+if (onBoardInfraredSensor.keyPressed(BUTTON_UP))
+{
+    // Enfin, on effectue une action :
+    moveMBot(FORWARD, 255);
+}
+
+else 
+{
+    moveMBot(FORWARD, 0);
+}
 }
