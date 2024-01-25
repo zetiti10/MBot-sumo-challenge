@@ -43,43 +43,33 @@ void setup()
 void loop()
 {
     // Programme exécuté en boucle.
-    boolean backward = false;
-
     if (onBoardInfraredSensor.keyPressed(BUTTON_UP))
     {
         moveMBot(FORWARD, 255);
-        setLED(0, 0, 255);
+        setLED(255, 255, 255);
     }
 
     else if (onBoardInfraredSensor.keyPressed(BUTTON_DOWN))
     {
         moveMBot(BACKWARD, 255);
-        backward = true;
+        setLED(255, 0, 0);
     }
 
     else if (onBoardInfraredSensor.keyPressed(BUTTON_LEFT))
     {
         moveMBot(LEFT, 150);
-        setLED(255, 0, 0);
+        setLED(0, 255, 0);
     }
 
     else if (onBoardInfraredSensor.keyPressed(BUTTON_RIGHT))
     {
         moveMBot(RIGHT, 150);
-        setLED(42, 184, 55);
+        setLED(0, 0, 255);
     }
 
     else
     {
         moveMBot(FORWARD, 0);
         setLED(0, 0, 0);
-    }
-
-    if (backward)
-    {
-        setLED(0, 0, 0);
-        onBoardBuzzer.tone(5000, 100);
-        setLED(255, 255, 255);
-        onBoardBuzzer.tone(5000, 100);
     }
 }
