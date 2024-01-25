@@ -81,6 +81,29 @@ void loop()
 
     else if (mode == BUTTON_C)
     {
+        switch (onBoardLineFinder.readSensors())
+        {
+        case S1_IN_S2_IN:
+            setLED(255, 255, 0);
+            moveMBot(FORWARD, 100);
+            break;
+        case S1_IN_S2_OUT:
+            setLeftLED(255, 255, 0);
+            setRightLED(0, 0, 0);
+            moveMBot(LEFT, 100); 
+            break;
+        case S1_OUT_S2_IN:
+            setLeftLED(0, 0, 0);
+            setRightLED(255, 255, 0);
+            moveMBot(RIGHT, 100); 
+            break; 
+        case S1_OUT_S2_OUT:
+            setLED(0, 0, 0);
+            moveMBot(BACKWARD, 100);
+            break;
+        default:
+            break;
+        }
     }
 
     else if (mode == BUTTON_D)
