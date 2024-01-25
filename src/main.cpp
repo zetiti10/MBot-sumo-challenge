@@ -34,6 +34,10 @@ void setup()
     initialization();
 
     // Programme exécuté une fois au démarrage du robot.
+    delay(10 * 1000);
+    moveMBot(FORWARD, 255);
+    delay(3000);
+    moveMBot(FORWARD, 0);
 }
 
 // Cette fonction s'exécute en boucle après le `setup()`.
