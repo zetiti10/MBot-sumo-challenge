@@ -33,8 +33,6 @@ void setup()
     // NE PAS SUPPRIMER LA LIGNE CI-DESSOUS !
     initialization();
 
-    int moveTime = 1 * 1000;
-
     // Programme exécuté une fois au démarrage du robot.
     // Délais de 10 secondes, soit 10 * 1000 millisecondes.
     delay(10 * 1000);
@@ -43,13 +41,13 @@ void setup()
     moveMBot(FORWARD, 255);
 
     // On attend que le robot avance.
-    delay(moveTime);
+    delay(666);
 
     // Le robot recule à la vitesse maximale.
     moveMBot(BACKWARD, 255);
 
     // On attend que le robot recule.
-    delay(moveTime);
+    delay(769);
 
     // On arrête le robot.
     moveMBot(FORWARD, 0);
