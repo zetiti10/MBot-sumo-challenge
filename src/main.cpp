@@ -73,14 +73,69 @@ void loop()
     // Exécution du mode en cours.
     if (mode == BUTTON_A)
     {
+        Serial.println("mode manuel activé");
+        setLED(255, 255, 255);
+        if (onBoardInfraredSensor.keyPressed(BUTTON_UP))
+        {
+            moveMBot(FORWARD, 255);
+        }
+
+        else if (onBoardInfraredSensor.keyPressed(BUTTON_DOWN))
+        {
+            moveMBot(BACKWARD, 255);
+        }
+
+        else if (onBoardInfraredSensor.keyPressed(BUTTON_LEFT))
+        {
+            moveMBot(LEFT, 150);
+        }
+
+        else if (onBoardInfraredSensor.keyPressed(BUTTON_RIGHT))
+        {
+            moveMBot(RIGHT, 150);
+        }
+
+        else
+        {
+            moveMBot(FORWARD, 0);
+        }
     }
 
     else if (mode == BUTTON_B)
     {
+        Serial.println("mode détécteur d'obstacles activé");
+        setLED(0, 255, 0);
+        if (onBoardInfraredSensor.keyPressed(BUTTON_UP))
+        {
+            moveMBot(FORWARD, 255);
+        }
+
+        else if (onBoardInfraredSensor.keyPressed(BUTTON_DOWN))
+        {
+            moveMBot(BACKWARD, 255);
+        }
+
+        else if (onBoardInfraredSensor.keyPressed(BUTTON_LEFT))
+        {
+            moveMBot(LEFT, 150);
+        }
+
+        else if (onBoardInfraredSensor.keyPressed(BUTTON_RIGHT))
+        {
+            moveMBot(RIGHT, 150);
+        }
+
+        else
+        {
+            moveMBot(FORWARD, 0);
+        }
+        onBoardBuzzer.tone(onBoardUltrasonicSensor.distanceCm()*1000, 100);
+        Serial.println(onBoardUltrasonicSensor.distanceCm());
     }
 
     else if (mode == BUTTON_C)
     {
+        Serial.println("mode suiveur de ligne activé");
     }
 
     else if (mode == BUTTON_D)
