@@ -41,6 +41,7 @@ void setup()
 }
 
 // Cette fonction s'exécute en boucle après le `setup()`.
+
 void loop()
 {
     // Programme exécuté en boucle.
@@ -110,9 +111,19 @@ void loop()
     else if (mode == BUTTON_B)
     {
         int distance = map(onBoardUltrasonicSensor.distanceCm(), 0, 50, 255, 0);
-        if(distance < 0) distance = 0;
+        if (distance < 0)
+            distance = 0;
         setLED(0, distance, 0);
         delay(100);
+
+        moveMBot(FORWARD, speed);
+        if (onBoardUltrasonicSensor.distanceCm() < 5)
+        {
+            moveMBot(BACKWARD, 150);
+            delay(300);
+            moveMBot(RIGHT, 150);
+            delay(300);
+        }
     }
 
     else if (mode == BUTTON_C)
