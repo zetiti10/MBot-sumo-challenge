@@ -47,7 +47,7 @@ void loop()
     // Sélection du mode.
     if (onBoardInfraredSensor.keyPressed(BUTTON_A))
     {
-        mode = BUTTON_B;
+        mode = BUTTON_A;
     }
 
     else if (onBoardInfraredSensor.keyPressed(BUTTON_B))
