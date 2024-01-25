@@ -30,6 +30,8 @@ MeBuzzer onBoardBuzzer;
 // Variables globales.
 int mode = BUTTON_A;
 int speed = 100;
+int distance;
+unsigned long distanceCounter = 0;
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
@@ -110,18 +112,17 @@ void loop()
 
     else if (mode == BUTTON_B)
     {
-        int distance = map(onBoardUltrasonicSensor.distanceCm(), 0, 50, 255, 0);
-        if (distance < 0)
-            distance = 0;
-        setLED(0, distance, 0);
-        delay(100);
+        int LEDDistance = map(distance, 0, 50, 255, 0);
+        if (LEDDistance < 0)
+            LEDDistance = 0;
+        setLED(0, LEDDistance, 0);
 
         moveMBot(FORWARD, speed);
-        if (onBoardUltrasonicSensor.distanceCm() < 5)
+        if (distance < 5)
         {
-            moveMBot(BACKWARD, 150);
+            moveMBot(BACKWARD, speed);
             delay(300);
-            moveMBot(RIGHT, 150);
+            moveMBot(RIGHT, speed);
             delay(300);
         }
     }
@@ -151,5 +152,13 @@ void loop()
         default:
             break;
         }
+    }
+
+    // Morceau de programme qui lit la distance avec le capteur d'ultrasons toutes les 100ms.
+    if(millis() - distanceCounter >= 100)
+    {
+        distanceCounter = millis();
+
+        distance = onBoardUltrasonicSensor.distanceCm();
     }
 }
