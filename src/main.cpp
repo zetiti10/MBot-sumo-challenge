@@ -43,4 +43,16 @@ void loop()
     distance = onBoardUltrasonicSensor.distanceCm();
     delay(100);
     Serial.println(distance);
+
+    if ((distance > 15) && (distance < 30))
+    {
+        onBoardBuzzer.tone(523, 250);
+        delay(200);
+    }
+
+    if (distance < 15)
+    {
+        onBoardBuzzer.tone(523, 1000);
+    }
+    
 }
