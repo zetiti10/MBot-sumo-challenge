@@ -63,7 +63,7 @@ void setup()
     sendMessage("       u$$$$$$$$$$$$$$$$$$$$$$$$$u");
     sendMessage("       u$$$$$$"   "$$$"   "$$$$$$u");
     sendMessage("       u$$$$$$|   |$$$|   |$$$$$$u");
-    sendMessage("       |$$$$|      u$u       $$$$|");*/
+    sendMessage("       |$$$$|      u$u       $$$$|");
     sendMessage("        $$$u       u$u       u$$$");
     sendMessage("        $$$u      u$$$u      u$$$");
     sendMessage("         |$$$$uu$$$   $$$uu$$$$|");
@@ -80,15 +80,20 @@ void setup()
     sendMessage("  u$$$uuu$$$$$$$$$uu ||$$$$$$$$$$$uuu$$$");
     sendMessage("  $$$$$$$$$$||||           ||$$$$$$$$$$$|");
     sendMessage("   |$$$$$|                      ||$$$$||");
-    /*sendMessage("     $$$|                         $$$$|");
+    sendMessage("     $$$|                         $$$$|");
 
-    sendMessage("");
-    
+    sendMessage("");*/
+
     sendMessage("-----------------------------------------");
     sendMessage("|                                       |");
     sendMessage("|              READY TO TROLL           |");
     sendMessage("|                                       |");
-    sendMessage("-----------------------------------------");*/
+    sendMessage("-----------------------------------------");
+
+    for (int i = 0; i < 20000; i += 1)
+    {
+        onBoardBuzzer.tone(i, 1);
+    }
 }
 
 void schedule(int frequency)
