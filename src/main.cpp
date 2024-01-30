@@ -26,6 +26,7 @@ MeDCMotor leftWheelMotor(PIN_LEFT_WHEEL_MOTOR);
 MeDCMotor rightWheelMotor(PIN_RIGHT_WHEEL_MOTOR);
 MeRGBLed onBoardRGBLED(PIN_RIGHT_ONBOARD_RGB_LED, PIN_LEFT_ONBOARD_RGB_LED);
 MeBuzzer onBoardBuzzer;
+int distance = 0;
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
@@ -39,5 +40,7 @@ void setup()
 // Cette fonction s'exécute en boucle après le `setup()`.
 void loop()
 {
-    // Programme exécuté en boucle.
+    distance = onBoardUltrasonicSensor.distanceCm();
+    delay(100);
+    Serial.println(distance);
 }
