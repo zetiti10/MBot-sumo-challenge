@@ -49,41 +49,114 @@ void loop()
     // Programme exécuté en boucle.
 
     // Sélection du mode.
-    if (onBoardInfraredSensor.keyPressed(BUTTON_A) && mode != BUTTON_A)
+    unsigned char key = onBoardInfraredSensor.getCode();
+    switch (key)
     {
-        mode = BUTTON_A;
-        Serial.println("Mode manuel activé.");
+    case BUTTON_A:
+        if (mode != BUTTON_A)
+        {
+            mode = BUTTON_A;
+            Serial.println("Mode manuel activé.");
+        }
+        break;
+
+    case BUTTON_B:
+        if (mode != BUTTON_B)
+        {
+            mode = BUTTON_B;
+            Serial.println("Mode autonome activé.");
+        }
+        break;
+
+    case BUTTON_C:
+        if (mode != BUTTON_C)
+        {
+            mode = BUTTON_C;
+            Serial.println("Mode suiveur de ligne activé.");
+        }
+        break;
+
+    case BUTTON_1:
+    {
+        int number = map(1, 0, 9, 0, 255);
+        if (speed != number)
+            speed = number;
+    }
+    break;
+
+    case BUTTON_2:
+    {
+        int number = map(2, 0, 9, 0, 255);
+        if (speed != number)
+            speed = number;
+        break;
     }
 
-    else if (onBoardInfraredSensor.keyPressed(BUTTON_B) && mode != BUTTON_B)
+    case BUTTON_3:
     {
-        mode = BUTTON_B;
-        Serial.println("Mode autonome activé.");
+        int number = map(3, 0, 9, 0, 255);
+        if (speed != number)
+            speed = number;
+        break;
     }
 
-    else if (onBoardInfraredSensor.keyPressed(BUTTON_C) && mode != BUTTON_C)
+    case BUTTON_4:
     {
-        mode = BUTTON_C;
-        Serial.println("Mode suiveur de ligne activé.");
+        int number = map(4, 0, 9, 0, 255);
+        if (speed != number)
+            speed = number;
+        break;
     }
 
-    if (onBoardInfraredSensor.keyPressed(BUTTON_D) && speed != 100)
+    case BUTTON_5:
     {
-        speed = 100;
-        Serial.println("Vitesse lente enclenchée.");
+        int number = map(5, 0, 9, 0, 255);
+        if (speed != number)
+            speed = number;
+        break;
     }
 
-    else if (onBoardInfraredSensor.keyPressed(BUTTON_E) && speed != 255)
+    case BUTTON_6:
     {
-        speed = 255;
-        Serial.println("Vitesse maximale enclenchée.");
+        int number = map(6, 0, 9, 0, 255);
+        if (speed != number)
+            speed = number;
+        break;
+    }
+
+    case BUTTON_7:
+    {
+        int number = map(7, 0, 9, 0, 255);
+        if (speed != number)
+            speed = number;
+        break;
+    }
+
+    case BUTTON_8:
+    {
+        int number = map(8, 0, 9, 0, 255);
+        if (speed != number)
+            speed = number;
+        break;
+    }
+
+    case BUTTON_9:
+    {
+        int number = map(9, 0, 9, 0, 255);
+        if (speed != number)
+            speed = number;
+        break;
+    }
+
+    default:
+        break;
     }
 
     // Exécution du mode en cours.
     if (mode == BUTTON_A)
     {
         setLED(255, 255, 255);
-        
+
         if (onBoardInfraredSensor.keyPressed(BUTTON_UP))
         {
             moveMBot(FORWARD, speed);
@@ -112,13 +185,13 @@ void loop()
 
     else if (mode == BUTTON_B)
     {
-        int LEDDistance = map(distance, 0, 50, 255, 0);
+        int LEDDistance = map(distance, 0, 20, 255, 0);
         if (LEDDistance < 0)
             LEDDistance = 0;
         setLED(0, LEDDistance, 0);
 
         moveMBot(FORWARD, speed);
-        if (distance < 5)
+        if (distance < 10)
         {
             moveMBot(BACKWARD, speed);
             delay(300);
@@ -155,7 +228,7 @@ void loop()
     }
 
     // Morceau de programme qui lit la distance avec le capteur d'ultrasons toutes les 100ms.
-    if(millis() - distanceCounter >= 100)
+    if (millis() - distanceCounter >= 100)
     {
         distanceCounter = millis();
 
