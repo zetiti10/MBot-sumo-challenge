@@ -27,6 +27,7 @@ MeDCMotor rightWheelMotor(PIN_RIGHT_WHEEL_MOTOR);
 MeRGBLed onBoardRGBLED(PIN_RIGHT_ONBOARD_RGB_LED, PIN_LEFT_ONBOARD_RGB_LED);
 MeBuzzer onBoardBuzzer;
 int distance = 0;
+int vitesse = 0;
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
@@ -40,19 +41,29 @@ void setup()
 // Cette fonction s'exécute en boucle après le `setup()`.
 void loop()
 {
-    distance = onBoardUltrasonicSensor.distanceCm();
-    delay(100);
-    Serial.println(distance);
-
-    if ((distance > 15) && (distance < 30))
+    if (onBoardInfraredSensor.keyPressed(BUTTON_A))
     {
-        onBoardBuzzer.tone(523, 250);
-        delay(200);
-    }
+        delay(1000);
+        while (!onBoardInfraredSensor.keyPressed(BUTTON_C))
+        {
 
-    if (distance < 15)
-    {
-        onBoardBuzzer.tone(523, 1000);
+            distance = onBoardUltrasonicSensor.distanceCm();
+            delay(100);
+            vitesse = 255;
+
+            if (distance < 50)
+            {
+                vitesse = 127;
+                if (distance < 30)
+                {
+                    vitesse = 0;
+                }
+            }
+
+            moveMBot(FORWARD, vitesse);
+            delay(100);
+        }
+
+        moveMBot(FORWARD, 0);
     }
-    
 }
