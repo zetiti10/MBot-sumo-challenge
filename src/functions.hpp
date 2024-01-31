@@ -1,13 +1,14 @@
 #ifndef FUNCTIONS_DEFINITIONS
 #define FUNCTIONS_DEFINITIONS
 
+#define STOP 0
 #define FORWARD 1
 #define BACKWARD 2
 #define LEFT 3
 #define RIGHT 4
 
 void initialization();
-void moveMBot(int direction, int speed);
+void moveMBot(int direction);
 void setLeftLED(int r, int g, int b);
 void setRightLED(int r, int g, int b);
 void setLED(int r, int g, int b);

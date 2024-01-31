@@ -20,31 +20,23 @@ void initialization()
 {
     // Démarrage de la communication avec l'ordinateur.
     Serial.begin(115200);
-    Serial.println("Connexion établie !");
-    Serial.println("Début de l'initialisation des composants du MBot...");
 
     // Définition des broches des capteurs.
     pinMode(PIN_ONBOARD_BUTTON, INPUT);
 
-    Serial.println("Broche des capteurs initialisées.");
-
     // Lancement du capteur infrarouge (pour détecter les appuis de la télécommande).
     onBoardInfraredSensor.begin();
-
-    Serial.println("Capteur infrarouges initialisé.");
-
-    Serial.println("Initialisation terminée avec succès !");
 }
 
 /// @brief Modifie l'état des moteurs des roues du MBot. Pour arrêter le robot, mettre la vitesse à 0.
 /// @param direction Le déplacement à effectuer (FORWARD = avancer, BACKWARD = reculer, LEFT = tourner à gauche, RIGHT = tourner à droite).
-/// @param speed La vitesse, de -255 à 255.
-void moveMBot(int direction, int speed)
+/// @param speed La vitesse, de -100 à 100.
+void moveMBot(int direction)
 {
-    if (speed < -255)
-        speed = -255;
-    if (speed > 255)
-        speed = 255;
+    if (speed < -100)
+        speed = -100;
+    if (speed > 100)
+        speed = 100;
 
     int leftSpeed = 0;
     int rightSpeed = 0;
@@ -63,18 +55,18 @@ void moveMBot(int direction, int speed)
 
     else if (direction == LEFT)
     {
-        leftSpeed = -speed;
-        rightSpeed = speed;
+        leftSpeed = -rotationSpeed;
+        rightSpeed = rotationSpeed;
     }
 
     else if (direction == RIGHT)
     {
-        leftSpeed = speed;
-        rightSpeed = -speed;
+        leftSpeed = rotationSpeed;
+        rightSpeed = -rotationSpeed;
     }
 
-    leftWheelMotor.run(-(leftSpeed));
-    rightWheelMotor.run(rightSpeed);
+    leftWheelMotor.run(-(leftSpeed*(255/100)));
+    rightWheelMotor.run(rightSpeed*(255/100));
 }
 
 /// @brief Définit la couleur de la DEL RVB gauche.

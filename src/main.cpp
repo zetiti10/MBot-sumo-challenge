@@ -28,10 +28,14 @@ MeRGBLed onBoardRGBLED(PIN_RIGHT_ONBOARD_RGB_LED, PIN_LEFT_ONBOARD_RGB_LED);
 MeBuzzer onBoardBuzzer;
 
 // Variables globales.
-int mode = BUTTON_A;
+int mode = 1;
 int speed = 100;
-int distance;
-unsigned long distanceCounter = 0;
+int rotationSpeed = 100;
+int ultrasonicDistance;
+unsigned long mainScheduler = 0;
+unsigned long stopMoveScheduler = 0;
+int policeCounter = 0;
+boolean policeMode = false;
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
@@ -42,196 +46,202 @@ void setup()
     // Programme exécuté une fois au démarrage du robot.
 }
 
-// Cette fonction s'exécute en boucle après le `setup()`.
-
-void loop()
+void playFrequences()
 {
-    // Programme exécuté en boucle.
-
-    // Sélection du mode.
-    unsigned char key = onBoardInfraredSensor.getCode();
-    switch (key)
+    for (int i = 0; i < 20000; i += 15)
     {
-    case BUTTON_A:
-        if (mode != BUTTON_A)
+        onBoardBuzzer.tone(i, 1);
+    }
+}
+
+void schedulePolice(int frequency)
+{
+    onBoardBuzzer.tone(frequency, SIREN_SPEED_2);
+
+    policeCounter++;
+
+    if (policeCounter >= LIGHT_SPEED)
+    {
+        policeCounter = 0;
+
+        if (policeMode)
         {
-            mode = BUTTON_A;
-            Serial.println("Mode manuel activé.");
-        }
-        break;
-
-    case BUTTON_B:
-        if (mode != BUTTON_B)
-        {
-            mode = BUTTON_B;
-            Serial.println("Mode autonome activé.");
-        }
-        break;
-
-    case BUTTON_C:
-        if (mode != BUTTON_C)
-        {
-            mode = BUTTON_C;
-            Serial.println("Mode suiveur de ligne activé.");
-        }
-        break;
-
-    case BUTTON_1:
-    {
-        int number = map(1, 0, 9, 0, 255);
-        if (speed != number)
-            speed = number;
-    }
-    break;
-
-    case BUTTON_2:
-    {
-        int number = map(2, 0, 9, 0, 255);
-        if (speed != number)
-            speed = number;
-        break;
-    }
-
-    case BUTTON_3:
-    {
-        int number = map(3, 0, 9, 0, 255);
-        if (speed != number)
-            speed = number;
-        break;
-    }
-
-    case BUTTON_4:
-    {
-        int number = map(4, 0, 9, 0, 255);
-        if (speed != number)
-            speed = number;
-        break;
-    }
-
-    case BUTTON_5:
-    {
-        int number = map(5, 0, 9, 0, 255);
-        if (speed != number)
-            speed = number;
-        break;
-    }
-
-    case BUTTON_6:
-    {
-        int number = map(6, 0, 9, 0, 255);
-        if (speed != number)
-            speed = number;
-        break;
-    }
-
-    case BUTTON_7:
-    {
-        int number = map(7, 0, 9, 0, 255);
-        if (speed != number)
-            speed = number;
-        break;
-    }
-
-    case BUTTON_8:
-    {
-        int number = map(8, 0, 9, 0, 255);
-        if (speed != number)
-            speed = number;
-        break;
-    }
-
-    case BUTTON_9:
-    {
-        int number = map(9, 0, 9, 0, 255);
-        if (speed != number)
-            speed = number;
-        break;
-    }
-
-    default:
-        break;
-    }
-
-    // Exécution du mode en cours.
-    if (mode == BUTTON_A)
-    {
-        setLED(255, 255, 255);
-
-        if (onBoardInfraredSensor.keyPressed(BUTTON_UP))
-        {
-            moveMBot(FORWARD, speed);
-        }
-
-        else if (onBoardInfraredSensor.keyPressed(BUTTON_DOWN))
-        {
-            moveMBot(BACKWARD, speed);
-        }
-
-        else if (onBoardInfraredSensor.keyPressed(BUTTON_LEFT))
-        {
-            moveMBot(LEFT, speed);
-        }
-
-        else if (onBoardInfraredSensor.keyPressed(BUTTON_RIGHT))
-        {
-            moveMBot(RIGHT, speed);
+            setLeftLED(255, 0, 0);
+            setRightLED(0, 0, 255);
+            moveMBot(RIGHT);
         }
 
         else
         {
-            moveMBot(FORWARD, 0);
+            setLeftLED(0, 0, 255);
+            setRightLED(255, 0, 0);
+            moveMBot(LEFT);
+        }
+
+        policeMode = !policeMode;
+    }
+}
+
+void police()
+{
+    for (int i = 0; i < 20; i++)
+    {
+        for (int f = 635; f <= 912; f += SIREN_SPEED_1)
+            schedulePolice(f);
+
+        for (int f = 911; f >= 634; f -= SIREN_SPEED_1)
+            schedulePolice(f);
+    }
+}
+
+// Cette fonction s'exécute en boucle après le `setup()`.
+void loop()
+{
+    // Programme exécuté en boucle.
+    if (Serial.available())
+    {
+        delay(UART_WAITING_TIME);
+
+        String receivedMessage;
+        boolean cont = true;
+        while (Serial.available() > 0 && cont)
+        {
+            char letter = Serial.read();
+
+            if(letter == '\n')
+                cont = false;
+
+            receivedMessage += letter;
+        }
+
+        switch (receivedMessage[0])
+        {
+        case '0':
+            moveMBot(receivedMessage[1] - '0');
+            stopMoveScheduler = millis() + (receivedMessage[2] - '0') * 1000;
+            while (Serial.available())
+                Serial.read();
+            
+            break;
+
+        case '1':
+            moveMBot(receivedMessage[1] - '0');
+            break;
+
+        case '2':
+            mode = (receivedMessage[1] - '0');
+            break;
+
+        case '3':
+            if (receivedMessage[1] == '1')
+                speed = (receivedMessage[4] - '0') + (receivedMessage[3] - '0') * 10 + (receivedMessage[2] - '0') * 100;
+
+            else if (receivedMessage[1] == '2')
+                rotationSpeed = (receivedMessage[4] - '0') + (receivedMessage[3] - '0') * 10 + (receivedMessage[2] - '0') * 100;
+
+            break;
+
+        case '4':
+        {
+            int r = (receivedMessage[3] - '0') + (receivedMessage[2] - '0') * 10 + (receivedMessage[1] - '0') * 100;
+            int g = (receivedMessage[6] - '0') + (receivedMessage[5] - '0') * 10 + (receivedMessage[4] - '0') * 100;
+            int b = (receivedMessage[9] - '0') + (receivedMessage[8] - '0') * 10 + (receivedMessage[7] - '0') * 100;
+            setLED(r, g, b);
+            break;
+        }
+
+        case '5':
+            if (receivedMessage[1] == '1')
+                playFrequences();
+
+            else if (receivedMessage[1] == '2')
+                police();
+
+            break;
+
+        default:
+            break;
         }
     }
 
-    else if (mode == BUTTON_B)
+    else if (mode == AUTO_MODE)
     {
-        int LEDDistance = map(distance, 0, 20, 255, 0);
+        int LEDDistance = map(ultrasonicDistance, 0, 20, 255, 0);
         if (LEDDistance < 0)
             LEDDistance = 0;
         setLED(0, LEDDistance, 0);
 
-        moveMBot(FORWARD, speed);
-        if (distance < 10)
+        moveMBot(FORWARD);
+        if (ultrasonicDistance < 10)
         {
-            moveMBot(BACKWARD, speed);
+            moveMBot(BACKWARD);
             delay(300);
-            moveMBot(RIGHT, speed);
+            moveMBot(RIGHT);
             delay(300);
         }
     }
 
-    else if (mode == BUTTON_C)
+    else if (mode == LINE_MODE)
     {
         switch (onBoardLineFinder.readSensors())
         {
         case S1_IN_S2_IN:
             setLED(255, 255, 0);
-            moveMBot(FORWARD, speed);
+            moveMBot(FORWARD);
             break;
         case S1_IN_S2_OUT:
             setLeftLED(255, 255, 0);
             setRightLED(0, 0, 0);
-            moveMBot(LEFT, speed);
+            moveMBot(LEFT);
             break;
         case S1_OUT_S2_IN:
             setLeftLED(0, 0, 0);
             setRightLED(255, 255, 0);
-            moveMBot(RIGHT, speed);
+            moveMBot(RIGHT);
             break;
         case S1_OUT_S2_OUT:
             setLED(0, 0, 0);
-            moveMBot(BACKWARD, speed);
+            moveMBot(BACKWARD);
             break;
         default:
             break;
         }
     }
 
-    // Morceau de programme qui lit la distance avec le capteur d'ultrasons toutes les 100ms.
-    if (millis() - distanceCounter >= 100)
+    if (millis() - mainScheduler >= 100)
     {
-        distanceCounter = millis();
+        mainScheduler = millis();
 
-        distance = onBoardUltrasonicSensor.distanceCm();
+        ultrasonicDistance = onBoardUltrasonicSensor.distanceCm();
+
+        String message = "0";
+        if (ultrasonicDistance < 100)
+        {
+            if (ultrasonicDistance < 10)
+                message += "0";
+            message += ultrasonicDistance;
+        }
+
+        else
+            message += "99";
+
+        Serial.println(message);
+    }
+
+    if (stopMoveScheduler != 0 && millis() > stopMoveScheduler)
+    {
+        stopMoveScheduler = 0;
+
+        moveMBot(STOP);
+    }
+
+    if (buttonPressed())
+    {
+        while (buttonPressed())
+            delay(1);
+
+        delay(50);
+
+        Serial.println("1");
     }
 }
