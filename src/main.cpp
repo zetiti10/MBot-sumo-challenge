@@ -41,29 +41,18 @@ void setup()
 // Cette fonction s'exécute en boucle après le `setup()`.
 void loop()
 {
-    if (onBoardInfraredSensor.keyPressed(BUTTON_A))
+    distance = onBoardUltrasonicSensor.distanceCm();
+    delay(100);
+
+    if (distance < 10)
     {
-        delay(1000);
-        while (!onBoardInfraredSensor.keyPressed(BUTTON_C))
-        {
+        vitesse = 0;
+        moveMBot(FORWARD, vitesse);
+    }
 
-            distance = onBoardUltrasonicSensor.distanceCm();
-            delay(100);
-            vitesse = 255;
-
-            if (distance < 50)
-            {
-                vitesse = 127;
-                if (distance < 30)
-                {
-                    vitesse = 0;
-                }
-            }
-
-            moveMBot(FORWARD, vitesse);
-            delay(100);
-        }
-
-        moveMBot(FORWARD, 0);
+    else
+    {
+        vitesse = 255;
+        moveMBot(FORWARD, vitesse);
     }
 }
