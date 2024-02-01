@@ -26,8 +26,9 @@ MeDCMotor leftWheelMotor(PIN_LEFT_WHEEL_MOTOR);
 MeDCMotor rightWheelMotor(PIN_RIGHT_WHEEL_MOTOR);
 MeRGBLed onBoardRGBLED(PIN_RIGHT_ONBOARD_RGB_LED, PIN_LEFT_ONBOARD_RGB_LED);
 MeBuzzer onBoardBuzzer;
-int distance = 0;
-int vitesse = 0;
+int distance;
+int vitesse = 255;
+int rotation = LEFT;
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
@@ -36,6 +37,7 @@ void setup()
     initialization();
 
     // Programme exécuté une fois au démarrage du robot.
+    moveMBot(FORWARD, vitesse);
 }
 
 // Cette fonction s'exécute en boucle après le `setup()`.
@@ -44,15 +46,14 @@ void loop()
     distance = onBoardUltrasonicSensor.distanceCm();
     delay(100);
 
-    if (distance < 20)
+    if (distance < 30)
     {
-        vitesse = 255;
+        moveMBot(rotation, vitesse);
+        delay(300);
+        if (rotation == LEFT)
+            rotation = RIGHT;
+        else
+            rotation = LEFT;
         moveMBot(FORWARD, vitesse);
-    }
-
-    else
-    {
-        vitesse = 127;
-        moveMBot(LEFT, vitesse);
     }
 }
