@@ -44,15 +44,15 @@ void loop()
     distance = onBoardUltrasonicSensor.distanceCm();
     delay(100);
 
-    if (distance < 10)
+    if (distance < 20)
     {
-        vitesse = 127;
-        moveMBot(LEFT, vitesse);
+        vitesse = 255;
+        moveMBot(FORWARD, vitesse);
     }
 
     else
     {
-        vitesse = 255;
-        moveMBot(FORWARD, vitesse);
+        vitesse = 127;
+        moveMBot(LEFT, vitesse);
     }
 }
