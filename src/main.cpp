@@ -118,7 +118,7 @@ void loop()
         {
         case '0':
             moveMBot(receivedMessage[1] - '0');
-            stopMoveScheduler = millis() + (receivedMessage[2] - '0') * 1000;
+            stopMoveScheduler = millis() + (receivedMessage[2] - '0') * 100;
             while (Serial.available())
                 Serial.read();
             
