@@ -56,6 +56,10 @@ void loop()
             {
                 EtatSuiveur = onBoardLineFinder.readSensors();
             }
+
+            NombreDeLignesFranchies++;
         }
     }
+
+    moveMBot(FORWARD, 0);
 }
