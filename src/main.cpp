@@ -29,6 +29,7 @@ MeBuzzer onBoardBuzzer;
 
 // Variables globales.
 int speed = 255;
+unsigned long mainScheduler = 0;
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
@@ -65,5 +66,16 @@ void loop()
         break;
     default:
         break;
+    }
+
+    if (millis() - mainScheduler >= 100)
+    {
+        mainScheduler = millis();
+
+        while (onBoardUltrasonicSensor.distanceCm() < 5)
+        {
+            moveMBot(FORWARD, 0);
+            delay(500);
+        }
     }
 }
