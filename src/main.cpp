@@ -30,7 +30,7 @@ MeBuzzer onBoardBuzzer;
 // Variables globales
 int EtatSuiveur;
 int NombreDeLignesFranchies = 0;
-int NombreDeLignesAFranchir = 3;
+int NombreDeLignesAFranchir = 1;
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
