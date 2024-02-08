@@ -28,7 +28,7 @@ MeRGBLed onBoardRGBLED(PIN_RIGHT_ONBOARD_RGB_LED, PIN_LEFT_ONBOARD_RGB_LED);
 MeBuzzer onBoardBuzzer;
 
 // Variables globales.
-int speed = 255;
+int speed = 155;
 unsigned long mainScheduler = 0;
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
@@ -38,6 +38,7 @@ void setup()
     initialization();
 
     // Programme exécuté une fois au démarrage du robot.
+    delay(1000);
 }
 
 // Cette fonction s'exécute en boucle après le `setup()`.
@@ -68,14 +69,44 @@ void loop()
         break;
     }
 
+    // Une fois toutes les 100ms, on vérifie les capteurs.
     if (millis() - mainScheduler >= 100)
     {
         mainScheduler = millis();
 
-        while (onBoardUltrasonicSensor.distanceCm() < 5)
+        // Gagné.
+        if (onBoardUltrasonicSensor.distanceCm() < 15)
         {
             moveMBot(FORWARD, 0);
-            delay(500);
+
+            setLED(0, 0, 255);
+            onBoardBuzzer.tone(1000, 100);
+
+            // Communication avec le concurrent.
+            for (int i = 0; i < 10; i++)
+                onBoardInfraredSensor.sendString("stop");
+
+            while (!buttonPressed())
+            {
+                setLED(0, 0, 255);
+                onBoardBuzzer.tone(1000, 100);
+                setLED(255, 255, 255);
+                onBoardBuzzer.tone(1500, 100);
+                setLED(255, 0, 0);
+                onBoardBuzzer.tone(200, 100);
+            }
+        }
+
+        // Détection des autres messages.
+        if (onBoardInfraredSensor.getString() != "")
+        {
+            moveMBot(FORWARD, 0);
+
+            while (!buttonPressed())
+            {
+                setLED(255, 0, 0);
+                delay(500);
+            }
         }
     }
 }
