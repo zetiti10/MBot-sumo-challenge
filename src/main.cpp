@@ -27,6 +27,9 @@ MeDCMotor rightWheelMotor(PIN_RIGHT_WHEEL_MOTOR);
 MeRGBLed onBoardRGBLED(PIN_RIGHT_ONBOARD_RGB_LED, PIN_LEFT_ONBOARD_RGB_LED);
 MeBuzzer onBoardBuzzer;
 
+// Variables globales.
+int speed = 255;
+
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
 {
@@ -34,22 +37,33 @@ void setup()
     initialization();
 
     // Programme exécuté une fois au démarrage du robot.
-    // Délais de 15 secondes avant le démarrage du mouvement.
-    delay(15 * 1000);
-
-    for (int i = 0; i < 4; i ++)
-    {
-        moveMBot(FORWARD, 255);
-        delay(1 * 1000);
-        moveMBot(RIGHT, 255);
-        delay(1 * 1000);
-    }
-
-    moveMBot(FORWARD, 0);
 }
 
 // Cette fonction s'exécute en boucle après le `setup()`.
 void loop()
 {
     // Programme exécuté en boucle.
+    switch (onBoardLineFinder.readSensors())
+    {
+    case S1_IN_S2_IN:
+        setLED(255, 255, 0);
+        moveMBot(FORWARD, speed);
+        break;
+    case S1_IN_S2_OUT:
+        setLeftLED(255, 255, 0);
+        setRightLED(0, 0, 0);
+        moveMBot(LEFT, speed);
+        break;
+    case S1_OUT_S2_IN:
+        setLeftLED(0, 0, 0);
+        setRightLED(255, 255, 0);
+        moveMBot(RIGHT, speed);
+        break;
+    case S1_OUT_S2_OUT:
+        setLED(0, 0, 0);
+        moveMBot(BACKWARD, speed);
+        break;
+    default:
+        break;
+    }
 }
