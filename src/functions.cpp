@@ -66,7 +66,7 @@ void moveMBot(int direction)
     }
 
     leftWheelMotor.run(-(leftSpeed*(255/100)));
-    rightWheelMotor.run(rightSpeed*(255/100));
+    rightWheelMotor.run((rightSpeed*(255/100))*0.95);
 }
 
 /// @brief Définit la couleur de la DEL RVB gauche.
