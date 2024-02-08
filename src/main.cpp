@@ -30,6 +30,7 @@ MeBuzzer onBoardBuzzer;
 // Variables globales
 int EtatSuiveur;
 int NombreDeLignesFranchies = 0;
+int NombreDeLignesAFranchir = 3;
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
@@ -44,7 +45,7 @@ void setup()
 void loop()
 {
     // Programme exécuté en boucle.
-    while (NombreDeLignesFranchies < 3)
+    while (NombreDeLignesFranchies < NombreDeLignesAFranchir)
     {
         EtatSuiveur = onBoardLineFinder.readSensors();
 
