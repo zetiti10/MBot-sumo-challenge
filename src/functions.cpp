@@ -16,18 +16,6 @@
 #include "pinDefinitions.hpp"
 #include "main.hpp"
 
-void initialization()
-{
-    // Démarrage de la communication avec l'ordinateur.
-    Serial.begin(115200);
-
-    // Définition des broches des capteurs.
-    pinMode(PIN_ONBOARD_BUTTON, INPUT);
-
-    // Lancement du capteur infrarouge (pour détecter les appuis de la télécommande).
-    onBoardInfraredSensor.begin();
-}
-
 /// @brief Modifie l'état des moteurs des roues du MBot. Pour arrêter le robot, mettre la vitesse à 0.
 /// @param direction Le déplacement à effectuer (FORWARD = avancer, BACKWARD = reculer, LEFT = tourner à gauche, RIGHT = tourner à droite).
 /// @param speed La vitesse, de -100 à 100.

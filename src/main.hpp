@@ -26,16 +26,24 @@
 #define BUTTON_9 74
 #define BUTTON_SETTINGS 21
 
-#define MANUAL_MODE 1
-#define AUTO_MODE 2
-#define LINE_MODE 3
-#define FIGHT_MODE 4
-
 #define UART_WAITING_TIME 320 / 115200 + 1
 
-#define SIREN_SPEED_1 3
-#define SIREN_SPEED_2 1
-#define LIGHT_SPEED 100
+// Modes du robot.
+enum Mode
+{
+    MANUAL,
+    LINE_FOLLOWER,
+    AUTONOMOUS,
+    FIGHT
+};
+
+enum FightMode
+{
+    READY,
+    FIGHTING,
+    WIN,
+    LOSE
+};
 
 // Création des différents capteurs montés sur le robot.
 extern MeLineFollower onBoardLineFinder;
@@ -48,6 +56,7 @@ extern MeDCMotor rightWheelMotor;
 extern MeRGBLed onBoardRGBLED;
 extern MeBuzzer onBoardBuzzer;
 
+// Variables globales
 extern int speed;
 extern int rotationSpeed;
 

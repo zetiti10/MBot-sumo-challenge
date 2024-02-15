@@ -17,7 +17,7 @@
 #include "functions.hpp"
 
 // Création des différents capteurs montés sur le robot.
-MeLineFollower onBoardLineFinder(PORT_1);
+MeLineFollower onBoardLineFinder(PIN_ONBOARD_LINE_FINDER);
 MeUltrasonicSensor onBoardUltrasonicSensor(PIN_ONBOARD_ULTRASONIC_SENSOR);
 MeIR onBoardInfraredSensor;
 
@@ -28,92 +28,57 @@ MeRGBLed onBoardRGBLED(PIN_RIGHT_ONBOARD_RGB_LED, PIN_LEFT_ONBOARD_RGB_LED);
 MeBuzzer onBoardBuzzer;
 
 // Variables globales.
-int mode = 1;
+Mode mode = MANUAL;
+FightMode fightMode = READY;
 int speed = 100;
 int rotationSpeed = 100;
 int ultrasonicDistance;
 unsigned long mainScheduler = 0;
 unsigned long stopMoveScheduler = 0;
-int policeCounter = 0;
-boolean policeMode = false;
+int rotationTime = 800;
+int soundTime = 100;
+int fightSpeed = 50;
+int fightRotationSpeed = 50;
+int aleatory = 400;
+long aleaPercentage = 6;
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
 {
-    // NE PAS SUPPRIMER LA LIGNE CI-DESSOUS !
-    initialization();
+    // Démarrage de la communication avec l'ordinateur.
+    Serial.begin(115200);
 
-    // Programme exécuté une fois au démarrage du robot.
-}
+    // Définition des broches des capteurs.
+    pinMode(PIN_ONBOARD_BUTTON, INPUT);
 
-void playFrequences()
-{
-    for (int i = 0; i < 20000; i += 15)
-    {
-        onBoardBuzzer.tone(i, 1);
-    }
-}
+    randomSeed(analogRead(0));
 
-void schedulePolice(int frequency)
-{
-    onBoardBuzzer.tone(frequency, SIREN_SPEED_2);
-
-    policeCounter++;
-
-    if (policeCounter >= LIGHT_SPEED)
-    {
-        policeCounter = 0;
-
-        if (policeMode)
-        {
-            setLeftLED(255, 0, 0);
-            setRightLED(0, 0, 255);
-            moveMBot(RIGHT);
-        }
-
-        else
-        {
-            setLeftLED(0, 0, 255);
-            setRightLED(255, 0, 0);
-            moveMBot(LEFT);
-        }
-
-        policeMode = !policeMode;
-    }
-}
-
-void police()
-{
-    for (int i = 0; i < 20; i++)
-    {
-        for (int f = 635; f <= 912; f += SIREN_SPEED_1)
-            schedulePolice(f);
-
-        for (int f = 911; f >= 634; f -= SIREN_SPEED_1)
-            schedulePolice(f);
-    }
+    // Lancement du capteur infrarouge (pour détecter les appuis de la télécommande).
+    onBoardInfraredSensor.begin();
 }
 
 // Cette fonction s'exécute en boucle après le `setup()`.
 void loop()
 {
-    // Programme exécuté en boucle.
+    // Communication aves l'ordinateur
     if (Serial.available())
     {
+        // Récupération du message
         delay(UART_WAITING_TIME);
 
         String receivedMessage;
-        boolean cont = true;
-        while (Serial.available() > 0 && cont)
+        boolean stop = true;
+        while (Serial.available() > 0 && stop)
         {
             char letter = Serial.read();
 
-            if(letter == '\n')
-                cont = false;
+            if (letter == '\n')
+                stop = false;
 
             receivedMessage += letter;
         }
 
+        // Exécution de la requête du message.
         switch (receivedMessage[0])
         {
         case '0':
@@ -121,7 +86,7 @@ void loop()
             stopMoveScheduler = millis() + (receivedMessage[2] - '0') * 100;
             while (Serial.available())
                 Serial.read();
-            
+
             break;
 
         case '1':
@@ -129,7 +94,10 @@ void loop()
             break;
 
         case '2':
-            mode = (receivedMessage[1] - '0');
+            moveMBot(STOP);
+            setLED(0, 0, 0);
+            fightMode = READY;
+            mode = static_cast<Mode>((receivedMessage[1] - '0') - 1);
             break;
 
         case '3':
@@ -150,28 +118,23 @@ void loop()
             break;
         }
 
-        case '5':
-            if (receivedMessage[1] == '1')
-                playFrequences();
-
-            else if (receivedMessage[1] == '2')
-                police();
-
-            break;
-
         default:
             break;
         }
     }
 
-    else if (mode == AUTO_MODE)
+    // Mode autonome.
+    if (mode == AUTONOMOUS)
     {
+        // Gestion de la lymière en fonction de la distance mesurée.
         int LEDDistance = map(ultrasonicDistance, 0, 20, 255, 0);
         if (LEDDistance < 0)
             LEDDistance = 0;
-        setLED(0, LEDDistance, 0);
+        setLED(LEDDistance, 0, 0);
 
         moveMBot(FORWARD);
+
+        // On tourne si un obstacle est détecté.
         if (ultrasonicDistance < 10)
         {
             moveMBot(BACKWARD);
@@ -181,7 +144,8 @@ void loop()
         }
     }
 
-    else if (mode == LINE_MODE)
+    // Mode suiveur de ligne.
+    else if (mode == LINE_FOLLOWER)
     {
         switch (onBoardLineFinder.readSensors())
         {
@@ -208,12 +172,138 @@ void loop()
         }
     }
 
+    // Mode autonome de combat.
+    else if (mode == FIGHT)
+    {
+        if (fightMode == READY)
+        {
+            // Lancement du combat.
+            if (buttonPressed())
+            {
+                while (buttonPressed())
+                    delay(1);
+
+                delay(10);
+
+                fightMode = FIGHTING;
+
+                speed = 90;
+                rotationSpeed = fightRotationSpeed;
+
+                // Délai des 5 secondes.
+                setLED(100, 100, 0);
+                onBoardBuzzer.tone(10000, soundTime);
+                delay((1000 * 5) - (2 * soundTime));
+                onBoardBuzzer.tone(10000, soundTime);
+
+                int startMove = random(3);
+
+                switch (startMove)
+                {
+                case 0:
+                    moveMBot(LEFT);
+                    delay(2 * rotationTime);
+                    moveMBot(FORWARD);
+                    break;
+
+                case 1:
+                    moveMBot(RIGHT);
+                    delay(2 * rotationTime);
+                    moveMBot(FORWARD);
+                    break;
+
+                case 2:
+                    moveMBot(BACKWARD);
+                    delay(2 * rotationTime);
+                    break;
+                }
+
+                speed = fightSpeed;
+                moveMBot(FORWARD);
+            }
+        }
+
+        else if (fightMode == FIGHTING)
+        {
+            int aleatoryRotation = random((rotationTime - aleatory), (rotationTime + aleatory));
+
+            switch (onBoardLineFinder.readSensors())
+            {
+            case S1_IN_S2_OUT:
+                moveMBot(LEFT);
+                delay(aleatoryRotation);
+                moveMBot(FORWARD);
+                break;
+            case S1_OUT_S2_IN:
+                moveMBot(RIGHT);
+                delay(aleatoryRotation);
+                moveMBot(FORWARD);
+                break;
+            case S1_OUT_S2_OUT:
+                moveMBot(LEFT);
+                delay(2 * aleatoryRotation);
+                moveMBot(FORWARD);
+                break;
+            default:
+                break;
+            }
+
+            if (ultrasonicDistance < 20)
+            {
+                speed = 100;
+                moveMBot(FORWARD);
+            }
+
+            else
+            {
+                speed = fightSpeed;
+                moveMBot(FORWARD);
+
+                delay(1);
+                long r = random(10000);
+
+                if (r < aleaPercentage)
+                {
+                    delay(1);
+                    int aleaMove = random(2);
+
+                    if (aleaMove == 0)
+                        moveMBot(LEFT);
+
+                    else
+                        moveMBot(RIGHT);
+                        
+                    delay(aleatoryRotation);
+                    moveMBot(FORWARD);
+                }
+            }
+
+            if (buttonPressed())
+            {
+                while (buttonPressed())
+                    delay(1);
+
+                delay(10);
+
+                fightMode = READY;
+
+                moveMBot(STOP);
+                setLED(0, 0, 0);
+
+                onBoardBuzzer.tone(10000, soundTime);
+            }
+        }
+    }
+
+    // Exécution des tâches périodiques.
     if (millis() - mainScheduler >= 100)
     {
         mainScheduler = millis();
 
+        // Lecture de la valeur du capteur de distance.
         ultrasonicDistance = onBoardUltrasonicSensor.distanceCm();
 
+        // Envoi des données au logiciel.
         String message = "0";
         if (ultrasonicDistance < 100)
         {
@@ -228,20 +318,11 @@ void loop()
         Serial.println(message);
     }
 
+    // Gestion de l'arrêt programmé du robot.
     if (stopMoveScheduler != 0 && millis() > stopMoveScheduler)
     {
         stopMoveScheduler = 0;
 
         moveMBot(STOP);
-    }
-
-    if (buttonPressed())
-    {
-        while (buttonPressed())
-            delay(1);
-
-        delay(50);
-
-        Serial.println("1");
     }
 }
