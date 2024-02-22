@@ -35,12 +35,17 @@ int rotationSpeed = 100;
 int ultrasonicDistance;
 unsigned long mainScheduler = 0;
 unsigned long stopMoveScheduler = 0;
-int rotationTime = 800;
+
+int rotationTime = 300;
 int soundTime = 100;
-int fightSpeed = 50;
+int fightSpeed = 75;
 int fightRotationSpeed = 50;
-int aleatory = 400;
+int fightAttackSpeed = 100;
+int aleatory = 300;
 long aleaPercentage = 6;
+unsigned long rotationTimer = 0;
+unsigned long aleaTimer = 0;
+int alternate = LEFT;
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
 void setup()
@@ -191,90 +196,93 @@ void loop()
                 rotationSpeed = fightRotationSpeed;
 
                 // Délai des 5 secondes.
-                setLED(100, 100, 0);
+                setLED(0, 100, 100);
                 onBoardBuzzer.tone(10000, soundTime);
                 delay((1000 * 5) - (2 * soundTime));
                 onBoardBuzzer.tone(10000, soundTime);
-
-                int startMove = random(3);
-
-                switch (startMove)
-                {
-                case 0:
-                    moveMBot(LEFT);
-                    delay(2 * rotationTime);
-                    moveMBot(FORWARD);
-                    break;
-
-                case 1:
-                    moveMBot(RIGHT);
-                    delay(2 * rotationTime);
-                    moveMBot(FORWARD);
-                    break;
-
-                case 2:
-                    moveMBot(BACKWARD);
-                    delay(2 * rotationTime);
-                    break;
-                }
-
-                speed = fightSpeed;
-                moveMBot(FORWARD);
+                rotationTimer = millis();
+                aleaTimer = millis();
             }
         }
 
         else if (fightMode == FIGHTING)
         {
-            int aleatoryRotation = random((rotationTime - aleatory), (rotationTime + aleatory));
-
-            switch (onBoardLineFinder.readSensors())
+            if (ultrasonicDistance < 50)
             {
-            case S1_IN_S2_OUT:
-                moveMBot(LEFT);
-                delay(aleatoryRotation);
-                moveMBot(FORWARD);
-                break;
-            case S1_OUT_S2_IN:
-                moveMBot(RIGHT);
-                delay(aleatoryRotation);
-                moveMBot(FORWARD);
-                break;
-            case S1_OUT_S2_OUT:
-                moveMBot(LEFT);
-                delay(2 * aleatoryRotation);
-                moveMBot(FORWARD);
-                break;
-            default:
-                break;
-            }
+                rotationTimer = millis();
+                aleaTimer = millis();
 
-            if (ultrasonicDistance < 20)
-            {
-                speed = 100;
-                moveMBot(FORWARD);
+                if (alternate == LEFT)
+                    alternate = RIGHT;
+
+                else 
+                    alternate = LEFT;
+
+                switch (onBoardLineFinder.readSensors())
+                {
+                case S1_IN_S2_OUT:
+                    speed = rotationSpeed;
+                    moveMBot(LEFT);
+                    break;
+                case S1_OUT_S2_IN:
+                    speed = rotationSpeed;
+                    moveMBot(RIGHT);
+                    break;
+                case S1_OUT_S2_OUT:
+                    speed = rotationSpeed;
+                    moveMBot(LEFT);
+                    break;
+                default:
+                    speed = fightAttackSpeed;
+                    moveMBot(FORWARD);
+                    break;
+                }
             }
 
             else
             {
-                speed = fightSpeed;
-                moveMBot(FORWARD);
-
-                delay(1);
-                long r = random(10000);
-
-                if (r < aleaPercentage)
+                if ((millis() - rotationTimer) > 4000)
                 {
-                    delay(1);
-                    int aleaMove = random(2);
+                    int aleatoryRotation = random((rotationTime - aleatory), (rotationTime + aleatory));
 
-                    if (aleaMove == 0)
+                    switch (onBoardLineFinder.readSensors())
+                    {
+                    case S1_IN_S2_OUT:
+                        speed = rotationSpeed;
                         moveMBot(LEFT);
-
-                    else
+                        delay(aleatoryRotation);
+                        speed = fightSpeed;
+                        moveMBot(FORWARD);
+                        break;
+                    case S1_OUT_S2_IN:
+                        speed = rotationSpeed;
                         moveMBot(RIGHT);
-                        
-                    delay(aleatoryRotation);
-                    moveMBot(FORWARD);
+                        delay(aleatoryRotation);
+                        speed = fightSpeed;
+                        moveMBot(FORWARD);
+                        break;
+                    case S1_OUT_S2_OUT:
+                        speed = rotationSpeed;
+                        moveMBot(LEFT);
+                        delay(2 * aleatoryRotation);
+                        speed = fightSpeed;
+                        moveMBot(FORWARD);
+                        break;
+                    default:
+                        speed = fightSpeed;
+                        moveMBot(FORWARD);
+                        break;
+                    }
+
+                    if ((millis() - aleaTimer) > 10000)
+                        rotationTimer = millis();
+                }
+
+                else
+                {
+                    speed = fightRotationSpeed;
+                    moveMBot(alternate);
+                    aleaTimer = millis();
                 }
             }
 
@@ -296,7 +304,7 @@ void loop()
     }
 
     // Exécution des tâches périodiques.
-    if (millis() - mainScheduler >= 100)
+    if (millis() - mainScheduler >= 50)
     {
         mainScheduler = millis();
 
