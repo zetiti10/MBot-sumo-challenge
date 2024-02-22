@@ -35,6 +35,8 @@ int rotationSpeed = 100;
 int ultrasonicDistance;
 unsigned long mainScheduler = 0;
 unsigned long stopMoveScheduler = 0;
+int policeCounter = 0;
+boolean policeMode = false;
 
 int rotationTime = 300;
 int soundTime = 100;
@@ -45,6 +47,7 @@ int aleatory = 300;
 long aleaPercentage = 6;
 unsigned long rotationTimer = 0;
 unsigned long aleaTimer = 0;
+unsigned long attachedTimer = 0;
 int alternate = LEFT;
 
 // Cette fonction s'exécute une fois au démarrage du MBot.
@@ -60,6 +63,100 @@ void setup()
 
     // Lancement du capteur infrarouge (pour détecter les appuis de la télécommande).
     onBoardInfraredSensor.begin();
+}
+
+void push()
+{
+    moveMBot(BACKWARD);
+    delay(300);
+    moveMBot(FORWARD);
+    delay(500);
+}
+
+void startFight()
+{
+    while (buttonPressed())
+        delay(1);
+
+    delay(10);
+
+    fightMode = FIGHTING;
+    mode = FIGHT;
+
+    speed = 90;
+    rotationSpeed = fightRotationSpeed;
+
+    // Délai des 5 secondes.
+    setLED(0, 100, 100);
+    onBoardBuzzer.tone(10000, soundTime);
+    delay((1000 * 5) - (2 * soundTime));
+    onBoardBuzzer.tone(10000, soundTime);
+    rotationTimer = millis();
+    aleaTimer = millis();
+}
+
+void stopFight()
+{
+    while (buttonPressed())
+        delay(1);
+
+    delay(10);
+
+    fightMode = READY;
+
+    moveMBot(STOP);
+    setLED(0, 0, 0);
+
+    onBoardBuzzer.tone(10000, soundTime);
+}
+
+void playFrequences()
+{
+    for (int i = 0; i < 20000; i += 15)
+    {
+        onBoardBuzzer.tone(i, 1);
+    }
+}
+
+void schedulePolice(int frequency)
+{
+    onBoardBuzzer.tone(frequency, SIREN_SPEED_2);
+
+    policeCounter++;
+
+    if (policeCounter >= LIGHT_SPEED)
+    {
+        policeCounter = 0;
+
+        if (policeMode)
+        {
+            setLeftLED(255, 0, 0);
+            setRightLED(0, 0, 255);
+            moveMBot(RIGHT);
+        }
+
+        else
+        {
+            setLeftLED(0, 0, 255);
+            setRightLED(255, 0, 0);
+            moveMBot(LEFT);
+        }
+
+        policeMode = !policeMode;
+        moveMBot(STOP);
+    }
+}
+
+void police()
+{
+    for (int i = 0; i < 20; i++)
+    {
+        for (int f = 635; f <= 912; f += SIREN_SPEED_1)
+            schedulePolice(f);
+
+        for (int f = 911; f >= 634; f -= SIREN_SPEED_1)
+            schedulePolice(f);
+    }
 }
 
 // Cette fonction s'exécute en boucle après le `setup()`.
@@ -120,6 +217,24 @@ void loop()
             int g = (receivedMessage[6] - '0') + (receivedMessage[5] - '0') * 10 + (receivedMessage[4] - '0') * 100;
             int b = (receivedMessage[9] - '0') + (receivedMessage[8] - '0') * 10 + (receivedMessage[7] - '0') * 100;
             setLED(r, g, b);
+            break;
+        }
+        
+        case '5':
+            if (receivedMessage[1] == '1')
+                playFrequences();
+
+            else if (receivedMessage[1] == '2')
+                police();
+
+        case '6':
+        {
+            if (receivedMessage[1] == '1')
+                startFight();
+
+            else if (receivedMessage[1] == '0')
+                stopFight();
+
             break;
         }
 
@@ -184,25 +299,7 @@ void loop()
         {
             // Lancement du combat.
             if (buttonPressed())
-            {
-                while (buttonPressed())
-                    delay(1);
-
-                delay(10);
-
-                fightMode = FIGHTING;
-
-                speed = 90;
-                rotationSpeed = fightRotationSpeed;
-
-                // Délai des 5 secondes.
-                setLED(0, 100, 100);
-                onBoardBuzzer.tone(10000, soundTime);
-                delay((1000 * 5) - (2 * soundTime));
-                onBoardBuzzer.tone(10000, soundTime);
-                rotationTimer = millis();
-                aleaTimer = millis();
-            }
+                startFight();
         }
 
         else if (fightMode == FIGHTING)
@@ -215,7 +312,7 @@ void loop()
                 if (alternate == LEFT)
                     alternate = RIGHT;
 
-                else 
+                else
                     alternate = LEFT;
 
                 switch (onBoardLineFinder.readSensors())
@@ -235,12 +332,16 @@ void loop()
                 default:
                     speed = fightAttackSpeed;
                     moveMBot(FORWARD);
+                    if ((millis() - attachedTimer) > 3000)
+                        push();
                     break;
                 }
             }
 
             else
             {
+                attachedTimer = millis();
+
                 if ((millis() - rotationTimer) > 4000)
                 {
                     int aleatoryRotation = random((rotationTime - aleatory), (rotationTime + aleatory));
@@ -288,17 +389,7 @@ void loop()
 
             if (buttonPressed())
             {
-                while (buttonPressed())
-                    delay(1);
-
-                delay(10);
-
-                fightMode = READY;
-
-                moveMBot(STOP);
-                setLED(0, 0, 0);
-
-                onBoardBuzzer.tone(10000, soundTime);
+                stopFight();
             }
         }
     }

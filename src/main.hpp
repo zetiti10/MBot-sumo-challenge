@@ -28,6 +28,10 @@
 
 #define UART_WAITING_TIME 320 / 115200 + 1
 
+#define SIREN_SPEED_1 3
+#define SIREN_SPEED_2 1
+#define LIGHT_SPEED 100
+
 // Modes du robot.
 enum Mode
 {
