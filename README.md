@@ -2,7 +2,7 @@
 
 Programme du MBot pour gagner des combats de sumo.
 
-> Toute tentative d'esponnage industriel est considérée comme une déclaration de guerre. Nous n'aurons aucune pitié. Je vous surveille 👀
+> Ce petit tutoriel aidera l'équipe à développer les programmes.
 
 ## Le robot
 
@@ -200,17 +200,17 @@ Le MBot peut envoyer des messages à l'ordinateur grâce aux fonctions suivantes
 Exemple d'utilisation :
 
 ```cpp
-Serial.println("Ça sent la lose chez les autres groupes…");
+Serial.println("Hello World!");
 
-Serial.print("…ah non, c'est juste ");
-Serial.println("Paul.");
+Serial.print("Bonjour ");
+Serial.println("Monde !");
 ```
 
 Ce qui produit la sortie :
 
 ```out
-Ça sent la lose chez les autres groupes…
-…ah non, c'est juste Paul.
+Hello World!
+Bonjour Monde !
 ```
 
 #### Bouton embarqué
@@ -250,5 +250,3 @@ Pour lancer la communication en direct avec le MBot, cliquer sur l'icône de pri
 GitHub permet de développer un programme en équipe : c'est notre cas ! Chaque ordinateur possède une copie complète du programme qu'il peut modifier. Par la suite, il faut l'envoyer dans le stockage en ligne qui est [ici](https://github.com/zetiti10/MBot-sumo-challenge). Il est possible de consulter en ligne l'historique de toutes les modifications effectuées.
 
 Il existe un système de branche pour avoir plusieurs versions indépendantes du programme en parallèle.
-
-> Il me semble que vous êtes prêt à faire un programme _muy caliente_. Demandez-moi en cas de besoin. Des bisous, Louis.
